@@ -1,0 +1,305 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: "microsoft yahei", "Helvetica Neue Light", "HelveticaNeue-Light", "Helvetica Neue", Calibri, Helvetica, Arial;
+  font-size: 16px;
+  color: #333;
+  background: #fff;
+}
+input[type=text]:focus,
+input[type=password]:focus {
+  outline: none;
+}
+li {
+  list-style: none;
+}
+button,
+input {
+  font-family: "microsoft yahei", "Helvetica Neue Light", "HelveticaNeue-Light", "Helvetica Neue", Calibri, Helvetica, Arial;
+  border: none;
+}
+button:focus {
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6);
+  -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6);
+}
+.lg_wrapper {
+  width: 1170px;
+  margin: 0 auto;
+}
+.lg_header {
+  color: #fff;
+  width: 100%;
+  height: 88px;
+  line-height: 88px;
+  background: rgba(22, 194, 245, 0.5);
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.lg_header h1 {
+  background: url("../images/login_logo.png") 0 19px no-repeat;
+  text-indent: -9999px;
+  font-size: 28px;
+  font-weight: normal;
+}
+.lg_header h1 i {
+  display: inline-block;
+  vertical-align: middle;
+  margin-top: -6px;
+  margin-right: 8px;
+}
+.lg_otr {
+  height: 80px;
+  line-height: 80px;
+  background: none;
+}
+.lg_otr h1 {
+  background: none;
+  text-indent: 0;
+  margin-left: 190px;
+}
+.lg_otr h1 i {
+  background: url("../images/logo_school.png") no-repeat;
+  width: 30px;
+  height: 45px;
+}
+.nansha h1 {
+  background: url("../images/logo_nansha.png") 0 19px no-repeat;
+}
+.lg_banner {
+  background: url("../images/login_banner.jpg") top center no-repeat;
+  height: 538px;
+}
+.lg_banner.lg_school {
+  background: url("../images/login_banner_school.jpg") top center no-repeat;
+}
+.lg_banner .lg_wrapper {
+  position: relative;
+}
+.lg_banner form {
+  position: absolute;
+  top: 144px;
+  right: 0;
+  width: 420px;
+  height: 270px;
+  background: #fff;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -o-border-radius: 10px;
+  border-radius: 10px;
+  box-sizing: border-box;
+  padding: 20px 30px 0;
+}
+.lg_banner form h2 {
+  font-size: 18px;
+  font-weight: normal;
+  margin-bottom: 15px;
+}
+.lg_banner form h2 i {
+  color: #d9534f;
+  font-style: normal;
+  font-size: 14px;
+  margin-left: 30px;
+}
+.lg_banner form ul {
+  border: 1px solid #d9dbdc;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+  background: #e8eff0;
+}
+.lg_banner form ul li {
+  border-bottom: 1px solid #d9dbdc;
+  height: 50px;
+}
+.lg_banner form ul li:last-child {
+  border: none;
+}
+.lg_banner form ul li label {
+  line-height: 50px;
+  vertical-align: middle;
+  color: #666;
+  font-size: 14px;
+  font-style: normal;
+}
+.lg_banner form ul li label i {
+  background: url("../images/login_icon.png") no-repeat;
+  width: 26px;
+  height: 28px;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 10px;
+}
+.lg_banner form ul li label i.userIco {
+  background-position: 0 0;
+}
+.lg_banner form ul li label i.pwdIco {
+  background-position: 0 -28px;
+}
+.lg_banner form ul li input {
+  height: 50px;
+  border: none;
+  background: none;
+  width: 260px;
+  font-size: 16px;
+  text-indent: 5px;
+}
+.lg_banner form p {
+  font-size: 14px;
+  color: #666;
+  margin-top: 10px;
+  font-style: normal;
+}
+.lg_banner form p input {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  margin-right: 7px;
+}
+.lg_banner form p a {
+  float: right;
+  color: #07afcd;
+  text-decoration: none;
+}
+.lg_banner form div {
+  margin-top: 20px;
+}
+.lg_banner form div button {
+  width: 130px;
+  height: 40px;
+  color: #fff;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+.lg_banner form div button.lg_submit {
+  background: #08c3e5;
+}
+.lg_banner form div button.lg_submit:hover {
+  background: #07afcd;
+}
+.lg_banner form div button.lg_free {
+  background: #67d58e;
+}
+.lg_banner form div button.lg_free:hover {
+  background: #61c786;
+}
+.lg_services {
+  margin-bottom: 55px;
+}
+.lg_services h2 {
+  font-size: 22px;
+  font-weight: normal;
+  text-align: center;
+  margin: 25px 0 30px;
+  position: relative;
+}
+.lg_services h2 span {
+  background: #fff;
+  border-left: 10px solid #fff;
+  border-right: 10px solid #fff;
+}
+.lg_services h2:before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  margin-left: -177px;
+  width: 354px;
+  height: 1px;
+  background: #d6d8d9;
+  z-index: -1;
+}
+.lg_services ul {
+  overflow: hidden;
+  color: #555;
+  margin-top: 40px;
+}
+.lg_services ul li {
+  text-align: center;
+  float: left;
+  margin-right: 96px;
+  font-style: normal;
+}
+.lg_services ul li:last-child {
+  float: right;
+  margin-right: 0;
+}
+.lg_services ul li i {
+  background: url("../images/services.png") no-repeat;
+  display: block;
+  width: 156px;
+  height: 156px;
+  margin: 0 auto 10px;
+}
+.lg_services ul li i.sev_a {
+  background-position: 0 0;
+}
+.lg_services ul li i.sev_b {
+  background-position: 0 -156px;
+}
+.lg_services ul li i.sev_c {
+  background-position: 0 -312px;
+}
+.lg_services ul li i.sev_d {
+  background-position: 0 -468px;
+}
+.lg_services ul li i.sev_e {
+  background-position: 0 -624px;
+}
+.lg_footer {
+  padding: 34px 0;
+}
+.lg_footer p {
+  text-align: center;
+  color: #777;
+  font-size: 14px;
+  line-height: 28px;
+  white-space: pre;
+}
+#atagscloud {
+  width: 806px;
+  height: 400px;
+  position: absolute;
+  top: 138px;
+  left: 50%;
+  margin-left: -700px;
+}
+#atagscloud a {
+  width: 128px;
+  height: 70px;
+  display: block;
+  position: absolute;
+  text-decoration: none;
+  text-align: center;
+  vertical-align: middle;
+}
+#atagscloud a.orange {
+  background: url("../images/hots_orange.png") no-repeat;
+  color: #d55500;
+}
+#atagscloud a.blue {
+  background: url("../images/hots_blue.png") no-repeat;
+  color: #0e5bcf;
+}
+#atagscloud a span {
+  display: table;
+  height: 50px;
+  width: 100%;
+  text-align: center;
+}
+#atagscloud a span em {
+  display: table-cell;
+  vertical-align: middle;
+  font-style: normal;
+  padding: 0 10px;
+}

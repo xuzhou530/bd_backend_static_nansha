@@ -1,0 +1,168 @@
+## ac.html
+<%inherit file="base.html" />
+
+<div class="wrapper">
+    <!--导航-->
+    <%include file="nav.html" />
+    <!--右侧功能栏-->
+    <div class="projects">
+        <div class="tabbox">
+            <div class="bread">
+                <h2>AC管理</h2>
+            </div>
+        </div>
+        <div class="tabbox ns_table" id="aclist">
+            <div class="toolnav">
+                <h3>AC列表</h3>
+                <div class="toolbox">
+                    % if ins.is_allowed('create', 'ac'):
+                    <button type="button" class="btnGraySmall add">新增</button>
+                    % endif
+                </div>
+            </div>
+            <div class="areabox">
+                <table class="centerAlign">
+                    <tr>
+                        <th>名称</th>
+                        <th>IP</th>
+                        <th>品牌</th>
+                        <th>型号</th>
+                        <th>账户</th>
+                        <th>密码</th>
+                        <th>授权</th>
+                        % if ins.is_allowed('create', 'ac') and ins.is_allowed('update', 'ac'):
+                        <th>操作</th>
+                        % endif
+                    </tr>
+                    % for ac in acs:
+                    <tr>
+                        <td data-value="${ac.name}">${ac.name}</td>
+                        <td data-value="${ac.ip}">${ac.ip}</td>
+                        <td data-value="${ac.vendor}">
+                            % if ac.vendor == 'hanming' or ac.vendor == 'Hanming':
+                            <i class="vendor hanming"></i>
+                            % elif  ac.vendor == 'ruijie' or ac.vendor == 'Ruijie':
+                            <i class="vendor ruijie"></i>
+                            % elif  ac.vendor == 'h3c' or ac.vendor == 'H3C':
+                            <i class="vendor h3c"></i>
+                            % elif  ac.vendor == 'huawei' or ac.vendor == 'Huawei':
+                            <i class="vendor huawei"></i>
+                            % elif  ac.vendor == 'xinrui' or ac.vendor == 'Xinrui':
+                            <i class="vendor xinrui"></i>
+                            % elif  ac.vendor == 'shenxinfu' or ac.vendor == 'Shenxinfu':
+                            <i class="vendor shenxinfu"></i>
+                            % else:
+                            ${ac.vendor}
+                            % endif
+                        </td>
+                        <td data-value="${ac.model}">${ac.model}</td>
+                        <td data-value="${ac.user}">${ac.user}</td>
+                        % if ac.password=='':
+                        <td data-value="${ac.password}"></td>
+                        % else:
+                        <td data-value="${ac.password}" data-tip="${ac.password}" class="pwdtip">***</td>
+                        % endif
+                        <td data-value="${ac.pri}">
+                            % if ac.pri==1:
+                            是<input type="hidden" value="1" />
+                            % else:
+                            否<input type="hidden" value="0" />
+                            % endif
+                        </td>
+                        % if ins.is_allowed('create', 'ac') and ins.is_allowed('update', 'ac'):
+                        <td><span class="edit">编辑</span><span class="delete">删除</span><input type="hidden" value="${ac.id}" name="id" /><input type="hidden" value="${ac.mask}" name="mask" /><input type="hidden" value="${ac.secret}" name="secret" /></td>
+                        % endif
+                    </tr>
+                    % endfor
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%block name="jscode">
+    <script src="/static/js/lib/chart/echarts-all.js"></script>
+</%block>
+
+<%block name="aside">
+<div class="modal fade" id="modalAC">
+    <div class="modal_ac modal_body">
+        <h3>新增AC</h3>
+        <ul class="vertical">
+            <li>
+                <label>名称：</label>
+                <span class="veright">
+                    <div class="verify"><input type="text" name="name" class="matchVerify shouldVerify fill" /></div>
+                </span>
+            </li>
+            <li>
+                <label>IP：</label>
+                <span class="veright">
+                    <div class="verify"><input type="text" name="ip" class="matchVerify shouldVerify fill" /></div>
+                </span>
+            </li>
+            <li>
+                <label>品牌：</label>
+                <span class="veright">
+                    <select id="vendor" class="fill">
+                        <option value="h3c">h3c</option>
+                        <option value="hanming">汉明</option>
+                        <option value="huawei">华为</option>
+                        <option value="ruijie">锐捷</option>
+                        <option value="xinrui">信锐</option>
+                        <option value="shenxinfu">深信服</option>
+                        <option value="others">其他</option>
+                    </select>
+                </span>
+            </li>
+            <li>
+                <label>设备类型：</label>
+                <span class="veright">
+                    <select id="mask">
+                        <option value="0">AC</option>
+                        <option value="1">网关设备</option>
+                    </select>
+                </span>
+            </li>
+            <li>
+                <label>型号：</label>
+                <span class="veright">
+                    <div class="verify"><input type="text" name="model" class="matchVerify shouldVerify fill" /></div>
+                </span>
+            </li>
+            <li>
+                <label>账户：</label>
+                <span class="veright">
+                    <div class="verify"><input type="text" name="user" class="matchVerify shouldVerify fill" /></div>
+                </span>
+            </li>
+            <li>
+                <label>密码：</label>
+                <span class="veright">
+                    <div class="verify"><input type="text" name="password" class="matchVerify shouldVerify fill" /></div>
+                </span>
+            </li>
+            <li>
+                <label>授权：</label>
+                <span class="veright">
+                    <select id="pri" class="fill">
+                        <option value="0">否</option>
+                        <option value="1">是</option>
+                    </select>
+                </span>
+            </li>
+            <li>
+                <label>secret：</label>
+                <span class="veright">
+                    <div class="verify"><input type="text" name="secret" /></div>
+                </span>
+            </li>
+        </ul>
+        <div class="btngroups"><button type="button" class="btnBlue add">确定</button></div>
+        <i class="msg"></i>
+        <span class="closed">X</span>
+        <input type="hidden" name="idx" />
+        <input type="hidden" name="id" />
+    </div>
+</div>
+</%block>

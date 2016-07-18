@@ -1,0 +1,147 @@
+## policy.html
+<%inherit file="base.html" />
+
+<div class="wrapper">
+    <!--导航-->
+    <%include file="nav.html" />
+    <!--右侧功能栏-->
+    <div class="projects">
+        <div class="tabbox">
+            <div class="bread">
+                <h2>网络管理</h2>
+            </div>
+        </div>
+        <div class="tabbox ns_table" id="policylist">
+            <div class="toolnav">
+                <h3>网络列表</h3>
+            </div>
+            <div class="areabox">
+                <table class="centerAlign notrbg">
+                    <tr>
+                        <th>项目名称</th>
+                        <th>联系人</th>
+                        <th>详细地址</th>
+                        <th>开通时间</th>
+                        <th>&nbsp;&nbsp;</th>
+                    </tr>
+                    % for k, v in resources.iteritems():
+                    <tr class="ousideTable">
+                        <td>${k.name}</td>
+                        <td>${k.owner}</td>
+                        <td>${k.address}</td>
+                        <td>${k.ctime.strftime('%Y-%m-%d')}</td>
+                        <td><!--<span class="forbin">冻结</span><span class="delete">删除</span>--><span class="smore">展开<i class="aDwn"></i></span></td>
+                    </tr>
+                    <tr class="insideTable">
+                        <td colspan="5">
+                            <div>
+                                <table>
+                                    <tr>
+                                        <th width="15%">ID</th>
+                                        <th width="10%">专网</th>
+                                        <th width="10%">计费方式</th>
+                                        <th width="15%">SSID</th>
+                                        <th width="20%">备注</th>
+                                        <th width="15%">portal</th>
+                                        <th width="15%">操作</th>
+                                    </tr>
+                                    % for coll in v:
+                                    <tr>
+                                        <td>${coll._location.split(',')[-1]}</td>
+                                        <td>
+                                            % if coll.ispri == 1:
+                                            是<input type="hidden" value="1" />
+                                            % else:
+                                            否<input type="hidden" value="0" />
+                                            % endif
+                                        </td>
+                                        <td>
+                                            % if coll.policy==1:
+                                            免费<input type="hidden" value="1" />
+                                            % else:
+                                            收费<input type="hidden" value="0" />
+                                            % endif
+                                        </td>
+                                        <td>${coll.ssid}</td>
+                                        <td>${coll.note}</td>
+                                        <td>${coll.portal}</td>
+                                        <td>
+                                            % if ins.is_allowed('update', 'policy'):
+                                            <span class="edit">编辑</span>
+                                            % endif
+                                            % if ins.is_allowed('delete', 'policy'):
+                                            <span class="delete">删除</span>
+                                            % endif
+                                            <input type="hidden" value="${coll.appid}" class="appid" /><input type="hidden" value="${coll.shopid}" class="shopid" /><input type="hidden" value="${coll.secret}" class="secret" /><input type="hidden" value="${coll.id}" class="id" />
+                                        </td>
+                                    </tr>
+                                    % endfor
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    % endfor
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%block name="aside">
+<div class="modal fade" id="modalPn">
+    <div class="modal_pn modal_body">
+        <h3>新增网络配置</h3>
+        <p class="notice"><em>注：</em>同一个专网只能有唯一的SSID</p>
+        <ul class="vertical">
+            <li>
+                <label><i>*</i>私有网络：</label>
+                <span class="veright">
+                    <select id="pri">
+                        <option value="0">否</option>
+                        <option value="1">是</option>
+                    </select>
+                </span>
+            </li>
+            <li>
+                <label><i>*</i>收费方式：</label>
+                <span class="veright">
+                    <select id="policy">
+                        <option value="0">收费</option>
+                        <option value="1">免费</option>
+                    </select>
+                </span>
+            </li>
+            <li>
+                <label><i>*</i>SSID：</label>
+                <span class="veright"><div class="verify"><input type="text" class="matchVerify shouldVerify" name="ssid" /></div></span>
+            </li>
+            <li>
+                <label>备注：</label>
+                <span class="veright"><div class="verify"><input type="text" name="note" /></div></span>
+            </li>
+            <li>
+                <label><i>*</i>Portal：</label>
+                <span class="veright"><div class="verify"><input type="text" class="matchVerify shouldVerify" name="portal" /></div></span>
+            </li>
+            <li>
+                <label>AppId：</label>
+                <span class="veright"><div class="verify"><input type="text" name="appid" /></div></span>
+            </li>
+            <li>
+                <label>ShopId：</label>
+                <span class="veright"><div class="verify"><input type="text" name="shopid" /></div></span>
+            </li>
+            <li>
+                <label>Secret：</label>
+                <span class="veright"><div class="verify"><input type="text" name="secret" /></div></span>
+            </li>
+        </ul>
+        <div class="btngroups"><button type="button" class="btnBlue add">确定</button></div>
+        <i class="msg"></i>
+        <span class="closed">X</span>
+        <input type="hidden" name="id" />
+        <input type="hidden" name="idx" />
+        <input type="hidden" name="iidx" />
+    </div>
+</div>
+</%block>

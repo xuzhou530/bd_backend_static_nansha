@@ -1,0 +1,45 @@
+## wifi.html
+<%inherit file="base.html" />
+
+
+<div class="wrapper">
+    <!--导航-->
+    <%include file="nav.html" />
+    <!--右侧功能栏-->
+    <div class="projects">
+        <div class="tabbox">
+            <div class="bread">
+                <h2>${project_type.name}</h2>
+                <div class="widget">
+                    <%include file="button.html" />
+                </div>
+            </div>
+        </div>
+        <div class="tabbox ns_prolist nobg">
+            <div class="areabox">
+                % for project in projects:
+                <a class="pubtab" href="/projectaplist.html?location=${project.id}">
+                    <div class="tabimg">
+                        % if project.logo:
+                        <img src="${project.logo}"/>
+                        % else:
+                        <img src="/static/images/cover/defaultImg.jpg"/>
+                        % endif
+                    </div>
+                    <div class="tabinfo">
+                        <h6>${project.name}</h6>
+                        <ul>
+                            <li><label>资源数：</label>${project.account_collection.__len__()}</li>
+                            <li><label>AP数：</label>${project.total}</li>
+                            <li><label>正常运行数：</label>${project.onlines}</li>
+                            <li><label>当前接入数：</label>${project.conns}</li>
+                            <li><label>日均接入数：</label>${avg.get(project.id, '')}</li>
+                        </ul>
+                    </div>
+                </a>
+                % endfor
+            </div>
+        </div>
+    </div>
+</div>
+

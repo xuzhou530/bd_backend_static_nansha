@@ -1,0 +1,41 @@
+<tr>
+  <th>MAC地址</th>
+  <th>响应时间</th>
+  <th>状态</th>
+  <th>品牌</th>
+  <th>位置</th>
+  <th>最后连接数</th>
+  % if ins.is_allowed('update', 'ap'):
+  <th>操作</th>
+  % endif
+</tr>
+% for ap in aps:
+<tr>
+  <td>${ap.get('mac', '')}</td>
+  <td data-value="${ap.get('rtime', '')}">${ap.get('rtime', '')}</td>
+  <td>
+    % if ap['online'] == '1':
+    <span style="color:#27b600">在线</span>
+    % else:
+    <span style="color:#f74646;">离线</span>
+    % endif
+  </td>
+  <td>
+    <i class="vendor ${ap['vendor'].lower()}"></i>
+    <input type="hidden" value="${ap['vendor'].lower()}" />
+  </td>
+  <td data-value="${ap.get('position', '')}">${ap.get('position', '')}</td>
+  <td>${ap.get('connected', 0)}</td>
+  % if ins.is_allowed('update', 'ap'):
+  <td>
+    <span class="edit">编辑</span>
+    <button type="button" class="btnGrayAutoMin save">保存</button>
+    <button type="button" class="btnGrayAutoMin cancel">取消</button>
+    % if not ap['resource']:
+    <span class="error">(*待绑定)</span>
+    % endif
+    <input type="hidden" value="${str(ap['_id'])}" />
+  </td>
+  % endif
+</tr>
+% endfor

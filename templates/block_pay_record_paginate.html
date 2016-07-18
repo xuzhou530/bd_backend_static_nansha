@@ -1,0 +1,14 @@
+<input type="button" value="跳转" class="btnGrayAutoMin jump" />
+<input type="text" class="pagesize" placeholder="1" />
+<input type="button" value="下一页" class="btnGrayAutoMin next" />
+<div>
+  <span class="nowpage">${page}</span> /
+  <span class="pagecount">
+    % if page_count==0:
+    1
+    % else:
+    ${paginate.page_count}
+    % endif
+  </span>
+</div>
+<input type="button" value="上一页" class="btnGrayAutoMin prev" />

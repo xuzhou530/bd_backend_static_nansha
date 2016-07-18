@@ -1,0 +1,204 @@
+## projectInfo.html
+<%inherit file="base.html" />
+
+<div class="wrapper">
+    <input type="hidden" value="${location}" id="location" />
+    <!--导航-->
+    <%include file="nav.html" />
+    <!--右侧功能栏-->
+    <div class="projects">
+        <div class="tabbox">
+            <div class="bread">
+                <%include file="bread_nav.html" args="location=location,ins=ins,remain=[('项目信息', '/projectinfo.html?location={}'.format(location))],suffix='编辑'"/>
+            </div>
+        </div>
+        <div class="tabbox nopdg ns_form">
+            <h4 class="formInfo">
+                <em>项目基本信息</em>
+                <a href="/projectinfo.html?location=${location}">返回</a>
+            </h4>
+            <div class="areabox">
+                <ul class="vertical">
+                    <li>
+                        <label>属性：</label>
+                        <span class="veright">
+                            <select id="resId">
+                                % for type in resource_types:
+                                    % if resource.type == type:
+                                    <option value="${type.id}" selected>${type.title}</option>
+                                    % else:
+                                    <option value="${type.id}">${type.title}</option>
+                                    % endif
+                                % endfor
+                            </select>
+                        </span>
+                    </li>
+                    <li>
+                        <label><i>*</i>名称：</label>
+                        <span class="veright"><input type="text" name="resName" class="matchVerify shouldVerify" value="${resource.name}" /></span>
+                    </li>
+                    <li>
+                        <label>简要说明：</label>
+                        <span class="veright"><textarea name="note" id="note">${resource.note}</textarea></span>
+                    </li>
+                    <li>
+                        <label><i>*</i>相关企业或楼房地址：</label>
+                        <span class="veright"><input type="text" name="resAddress" class="matchVerify shouldVerify" value="${resource.address}" /></span>
+                    </li>
+                    <li>
+                        <label><i>*</i>联系人：</label>
+                        <span class="veright"><input type="text" name="resOwner" class="matchVerify shouldVerify" value="${resource.owner}" /></span>
+                    </li>
+                    <li>
+                        <label><i>*</i>电话：</label>
+                        <span class="veright"><input type="text" name="resMobile" class="matchVerify shouldVerify checkPhone" value="${resource.mobile}" /></span>
+                    </li>
+                    <li>
+                        <label>LOGO：</label>
+                        <span class="veright">
+                            <div class="file">
+                                <input type="hidden" name="resLogo" value="${resource.logo}" />
+                                <input type="file" class="uploadImg proImg" id="resLogo" imgElementId="imgResLogo" name="uploadImg" />
+                                <button type="button" class="btnGreen">选择图片</button>
+                                <div class="loading"></div>
+                            </div>
+                            % if resource.logo is None or resource.logo == 'None' or resource.logo == '':
+                            <div class="showImg">
+                            % else:
+                            <div class="showImg" style="display: block;">
+                            % endif
+                                <img src="${resource.logo}" id="imgResLogo" />
+                                <i class="deluploadImg"></i>
+                            </div>
+                        </span>
+                    </li>
+                    <li>
+                        <label>营业执照：</label>
+                        <span class="veright">
+                            <div class="file">
+                                <input type="hidden" name="license" value="${resource.license}" />
+                                <input type="file" class="uploadImg proImg" id="license" imgElementId="imgLicense" name="uploadImg" />
+                                <button type="button" class="btnGreen">选择图片</button>
+                                <div class="loading"></div>
+                            </div>
+                            % if resource.license is None or resource.license == 'None' or resource.license == '':
+                            <div class="showImg">
+                            % else:
+                            <div class="showImg" style="display: block;">
+                            % endif
+                                <img src="${resource.license}" id="imgLicense" />
+                                <i class="deluploadImg"></i>
+                            </div>
+                        </span>
+                    </li>
+                    <li>
+                        <label>拓扑图：</label>
+                        <span class="veright">
+                            <div class="file">
+                                <input type="hidden" name="topology" value="${resource.topology}" />
+                                <input type="file" class="uploadImg proImg" id="topology" imgElementId="imgTopology" name="uploadImg" />
+                                <button type="button" class="btnGreen">选择图片</button>
+                                <div class="loading"></div>
+                            </div>
+                            % if resource.topology is None or resource.topology == 'None' or resource.topology == '':
+                            <div class="showImg">
+                            % else:
+                            <div class="showImg" style="display: block;">
+                            % endif
+                                <img src="${resource.topology}" id="imgTopology" />
+                                <i class="deluploadImg"></i>
+                            </div>
+                        </span>
+                    </li>
+                    <li>
+                        <label>地图位置描点图：</label>
+                        <span class="veright">
+                            <div class="file">
+                                <input type="hidden" name="tracepoint" value="${resource.tracepoint}" />
+                                <input type="file" class="uploadImg proImg" id="tracePoint" imgElementId="imgTracePoint" name="uploadImg" />
+                                <button type="button" class="btnGreen">选择图片</button>
+                                <div class="loading"></div>
+                            </div>
+                            % if resource.tracepoint is None or resource.tracepoint == 'None' or resource.tracepoint == '':
+                            <div class="showImg">
+                            % else:
+                            <div class="showImg" style="display: block;">
+                            % endif
+                                <img src="${resource.tracepoint}" id="imgTracePoint" />
+                                <i class="deluploadImg"></i>
+                            </div>
+                        </span>
+                    </li>
+                    <li>
+                        <label>实地照片：</label>
+                        <span class="veright">
+                            <div class="file">
+                                <input type="hidden" name="fieldphoto" value="${resource.fieldphoto}" />
+                                <input type="file" class="uploadImg proImg" id="fieldPhoto" imgElementId="imgFieldPhoto" name="uploadImg" />
+                                <button type="button" class="btnGreen">选择图片</button>
+                                <div class="loading"></div>
+                            </div>
+                            % if resource.fieldphoto is None or resource.fieldphoto == 'None' or resource.fieldphoto == '':
+                            <div class="showImg">
+                            % else:
+                            <div class="showImg" style="display: block;">
+                            % endif
+                                <img src="${resource.fieldphoto}" id="imgFieldPhoto" />
+                                <i class="deluploadImg"></i>
+                            </div>
+                        </span>
+                    </li>
+                    <li>
+                        <label>施工图：<div><button type="button" class="btnGrayMin" id="addsgt">新增</button></div></label>
+                        <span class="veright">
+                            <div class="innerTable">
+                                <table class="sgt">
+                                    <tr>
+                                        <th>名称</th>
+                                        <th>图片</th>
+                                    </tr>
+                                    % if not resource.plans:
+                                    <tr>
+                                        <td><input type="text" class="sgtName" /></td>
+                                        <td class="file">
+                                            <input type="hidden" value="" />     <!--隐藏的图片返回值-->
+                                            <input type="file" class="uploadImg sgtImg" id="sgtImg" name="uploadImg" />   <!--id值随便指定一个，不重复-->
+                                            <button type="button" class="btnGreen">上传施工图</button>
+                                            <div class="loading"></div>
+                                            <em></em>    <!--前端显示的图片返回值-->
+                                            <div class="delsgt" style="display: block;"></div>
+                                        </td>
+                                    </tr>
+                                    % else:
+                                    % for p in json.loads(resource.plans):
+                                    <tr>
+                                        <td><input type="text" class="sgtName" value="${p['name']}"/></td>
+                                        <td class="file">
+                                            <input type="hidden" value="${p['imgurl']}" />     <!--隐藏的图片返回值-->
+                                            <input type="file" class="uploadImg sgtImg" id="sgtImg${loop.index}" name="uploadImg" />   <!--id值随便指定一个，不重复-->
+                                            <button type="button" class="btnGreen">上传施工图</button>
+                                            <div class="loading"></div>
+                                            <em>${p['imgurl']}</em>    <!--前端显示的图片返回值-->
+                                            <div class="delsgt" style="display: block;"></div>
+                                        </td>
+                                    </tr>
+                                    % endfor
+                                    % endif
+                                </table>
+                            </div>
+                        </span>
+                    </li>
+                </ul>
+                <p class="btnSub pdg60"><button type="button" class="btnBlue" id="editRes">保存</button></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%block name="aside">
+    <%include file="imgModal.html" />
+</%block>
+
+<%block name="jscode">
+    <script type="text/javascript" src="/static/js/lib/ajaxfileupload.js"></script>
+</%block>

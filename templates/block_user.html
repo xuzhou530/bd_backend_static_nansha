@@ -1,0 +1,26 @@
+<tr>
+  <th>账户</th>
+  <th>密码</th>
+  <th>所属</th>
+  <th>缴纳经费</th>
+  <th>到期时间</th>
+  <th>积分</th>
+  <th>在线充值</th>
+</tr>
+% for user in users:
+<tr>
+  <td>${user.user}</td>
+  <td class="pwdtip" data-tip="${user.password}">***</td>
+  <td>
+    <span>
+      % if user.resource:
+      ${user.resource.name}
+      % endif
+    </span>
+  </td>
+  <td></td>
+  <td>${user.expired}</td>
+  <td></td>
+  <td></td>
+</tr>
+% endfor

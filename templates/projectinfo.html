@@ -1,0 +1,109 @@
+## projectInfo.html
+<%inherit file="base.html" />
+
+<div class="wrapper">
+    <!--导航-->
+    <%include file="nav.html" />
+    <!--右侧功能栏-->
+    <div class="projects">
+        <div class="tabbox">
+            <div class="bread">
+                <%include file="bread_nav.html" args="location=location,ins=ins,suffix='项目信息'"/>
+            </div>
+        </div>
+        <div class="tabbox nopdg ns_form">
+            <h4 class="formInfo">
+                <em>项目基本信息</em>
+                % if ins.is_allowed('update', 'resource'):
+                <a href="/projectinfoedit.html?location=${location}">编辑</a>
+                % endif
+            </h4>
+            <div class="areabox">
+                <ul class="vertical">
+                    <li>
+                        <label>属性：</label>
+                        <span class="veright">${resource.type.title}</span>
+                    </li>
+                    <li>
+                        <label>名称：</label>
+                        <span class="veright">${resource.name}</span>
+                    </li>
+                    <li>
+                        <label>简要说明：</label>
+                        <span class="veright">${resource.note}</span>
+                    </li>
+                    <li>
+                        <label>相关企业或楼房地址：</label>
+                        <span class="veright">${resource.address}</span>
+                    </li>
+                    <li>
+                        <label>联系人：</label>
+                        <span class="veright">${resource.owner}</span>
+                    </li>
+                    <li>
+                        <label>电话：</label>
+                        <span class="veright">${resource.mobile}</span>
+                    </li>
+                    <li>
+                        <label>LOGO：</label>
+                        <span class="veright">
+                            % if resource.logo is None or resource.logo == 'None' or resource.logo == '':
+                            <img src="${resource.logo}" style="display: none;" />
+                            % else:
+                            <img src="${resource.logo}" />
+                            % endif
+                        </span>
+                    </li>
+                    <li>
+                        <label>营业执照：</label>
+                        <span class="veright">
+                            % if resource.license is None or resource.license == 'None' or resource.license == '':
+                            <img src="${resource.license}" style="display: none;" />
+                            % else:
+                            <img src="${resource.license}" />
+                            % endif
+                        </span>
+                    </li>
+                    <li>
+                        <label>拓扑图：</label>
+                        <span class="veright">
+                            % if resource.topology is None or resource.topology == 'None' or resource.topology == '':
+                            <img src="${resource.topology}" style="display: none;" />
+                            % else:
+                            <img src="${resource.topology}" />
+                            % endif
+                        </span>
+                    </li>
+                    <li>
+                        <label>地图位置描点图：</label>
+                        <span class="veright">
+                            % if resource.tracepoint is None or resource.tracepoint == 'None' or resource.tracepoint == '':
+                            <img src="${resource.tracepoint}" style="display: none;" />
+                            % else:
+                            <img src="${resource.tracepoint}" />
+                            % endif
+                        </span>
+                    </li>
+                    <li>
+                        <label>实地照片：</label>
+                        <span class="veright">
+                            % if resource.fieldphoto is None or resource.fieldphoto == 'None' or resource.fieldphoto == '':
+                            <img src="${resource.fieldphoto}" style="display: none;" />
+                            % else:
+                            <img src="${resource.fieldphoto}" />
+                            % endif
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%block name="aside">
+    <%include file="imgModal.html" />
+</%block>
+
+<%block name="jscode">
+    <script type="text/javascript" src="/static/js/lib/ajaxfileupload.js"></script>
+</%block>

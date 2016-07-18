@@ -1,0 +1,87 @@
+## projectsens.html
+<%inherit file="base.html" />
+
+<div class="wrapper">
+    <input type="hidden" value="${location}" id="location" />
+    <!--导航-->
+    <%include file="nav.html" />
+    <!--右侧功能栏-->
+    <div class="projects">
+        <div class="tabbox">
+            <div class="bread">
+                <%include file="bread_nav.html" args="location=location,ins=ins,suffix='感知分析'"/>
+                <div class="widget">
+                    <a href="javascript:;" class="btnBlueSmall">导出</a>
+                </div>
+            </div>
+        </div>
+        <div class="tabbox ns_table" id="sens">
+            <div class="toolnav">
+                <h3>监视组列表</h3>
+                <div class="toolbox">
+                    % if ins.is_allowed('create', 'sens'):
+                    <button type="button" class="btnGraySmall addbtn">新增监视</button>
+                    % endif
+                    <div class="search"><input type="text" placeholder="输入AP地址/AP名/MAC" /><button type="button"><i class="searchIcoGray"></i></button></div>
+                </div>
+            </div>
+            <div class="areabox">
+                <table>
+                    <tr>
+                        <th>监视名</th>
+                        <th>启动时间</th>
+                        <th>设备数</th>
+                        <th>今日</th>
+                        <th>昨日</th>
+                        <th>月均</th>
+                        <th>单次访问</th>
+                    </tr>
+                    % for g in groups:
+                    <tr group_id="${g['_id']}">
+                        <td><em>${g['group']}</em></td>
+                        <td>${g['ctime']}</td>
+                        <td>${len(g['aps'])}</td>
+                        <td>${g['today']}</td>
+                        <td>${g['yesterday']}</td>
+                        <td>${g.get('month', '')}</td>
+                        <td>${g.get('single_visit', '')}</td>
+                    </tr>
+                    % endfor
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%block name="aside">
+    <div class="modal fade" id="modalSens">
+        <div class="modal_sens modal_body">
+            <h3>新增监视</h3>
+            <ul class="vertical">
+                <li><label><i>*</i>监视组名：</label><span class="veright"><div class="verify"><input type="text" name="group" class="matchVerify" /></div></span></li>
+                <li><label><i>*</i>选择AP：</label>
+                    <span class="veright">
+                        <div class="checklist">
+                            <dl></dl>
+                        </div>
+                    </span>
+                </li>
+                <li><label><i>*</i>单位时间设置：</label>
+                    <span class="veright">
+                        <dl class="checktabs" id="unit">
+                           <dd data-value="week">周</dd>
+                           <dd data-value="day">天</dd>
+                           <dd data-value="hour" class="on">小时</dd>
+                           <dd data-value="minute">分钟</dd>
+                        </dl>
+                        <div class="verify ipu140"><input type="text" class="matchVerify checkInt" name="scale" /></div>
+                    </span>
+                </li>
+                <li><label><i>*</i>警戒数：</label><span class="veright"><div class="verify"><input type="text" name="warning" class="matchVerify" /></div></span></li>
+            </ul>
+            <div class="btngroups"><button type="button" class="btnBlue add">确定</button></div>
+            <i class="msg"></i>
+            <span class="closed">X</span>
+        </div>
+    </div>
+</%block>

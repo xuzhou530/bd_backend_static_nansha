@@ -1,0 +1,70 @@
+## projectuseredit.html
+<%inherit file="base.html" />
+
+<div class="wrapper">
+    <input type="hidden" value="${location}" id="location" />
+    <!--导航-->
+    <%include file="nav.html" />
+    <!--右侧功能栏-->
+    <div class="projects">
+        <div class="tabbox">
+            <div class="bread">
+                <%include file="bread_nav.html" />
+            </div>
+        </div>
+        <div class="tabbox nopdg ns_form">
+            <h4 class="formInfo">
+                <em>资源概览</em>
+                <a href="/projectcard.html?location=${location}">返回</a>
+            </h4>
+            <div class="areabox">
+                <ul class="vertical">
+                    <li>
+                    <label><i>*</i>资源名称：</label>
+                      <span class="veright"><input type="text" name="resName" class="matchVerify" value="${resource['name']}"/></span>
+                    </li>
+                    <li>
+                        <label><i>*</i>责任人：</label>
+                        <span class="veright"><input type="text" name="resOwner" class="matchVerify" value="${resource['owner']}"/></span>
+                    </li>
+                    <li>
+                        <label><i>*</i>联系电话：</label>
+                        <span class="veright"><input type="text" name="resMobile" class="matchVerify checkPhone" value="${resource['mobile']}"/></span>
+                    </li>
+                    <li>
+                        <label><i>*</i>楼房/店铺地址：</label>
+                        <span class="veright"><input type="text" name="resAddress" class="matchVerify" value="${resource['address']}"/></span>
+                    </li>
+                    <li>
+                    <label>照片/Logo：</label>
+                        <span class="veright">
+                            <div class="file">
+                              <input type="hidden" name="resLogo" value="${resource['logo']}"/>
+                                <input type="file" class="uploadImg proImg" id="resLogo" imgElementId="imgResLogo" name="uploadImg" />
+                                <button type="button" class="btnGreen">选择图片</button>
+                                <div class="loading"></div>
+                            </div>
+                            % if resource['logo'] is None or resource['logo'] == 'None' or resource['logo'] == '':
+                            <div class="showImg">
+                            % else:
+                            <div class="showImg" style="display: block;">
+                            % endif
+                                <img src="${resource['logo']}" id="imgResLogo" />
+                                <i class="deluploadImg"></i>
+                            </div>
+                        </span>
+                    </li>
+                </ul>
+                <p class="btnSub pdg60"><button type="button" class="btnBlue" id="editRes">编辑</button></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%block name="aside">
+    <%include file="imgModal.html" />
+</%block>
+
+<%block name="jscode">
+    <script type="text/javascript" src="/static/js/lib/ajaxfileupload.js"></script>
+</%block>

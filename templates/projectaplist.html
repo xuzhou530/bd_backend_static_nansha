@@ -1,0 +1,110 @@
+## projectaplist.html
+<%inherit file="base.html" />
+
+<div class="wrapper">
+    <input type="hidden" value="${location}" id="location" />
+    <!--导航-->
+    <%include file="nav.html" />
+    <!--右侧功能栏-->
+    <div class="projects">
+        <div class="tabbox">
+            <div class="bread">
+                <%include file="bread_nav.html" args="location=location,ins=ins,suffix='AP列表'"/>
+            </div>
+        </div>
+        <div class="tabbox ns_table" id="apslist">
+            <div class="toolnav">
+                <h3>AP列表</h3>
+                <div class="toolbox">
+                    <div class="search"><input type="text" placeholder="输入MAC/位置" data-search="" /><button type="button"><i class="searchIcoGray"></i></button></div>
+                    <select data-name="online"><option value="">状态</option><option value="1">在线</option><option value="0">离线</option></select>
+                    <select data-name="vendor"><option value="">品牌</option>
+                      % for k, v in vendors.iteritems():
+                      <option value="${k}">${v}</option>
+                      % endfor
+                    </select>
+                </div>
+            </div>
+            <div class="areabox">
+                <table data-sort="">
+                    <tr>
+                        <th>MAC地址</th>
+                        <th>响应时间</th>
+                        <th>状态</th>
+                        <th>品牌</th>
+                        <th>位置</th>
+                        <th>最后连接数</th>
+                        % if ins.is_allowed('update', 'ap'):
+                        <th>操作</th>
+                        % endif
+                    </tr>
+                    % for ap in aps:
+                    <tr>
+                        <td data-value="${ap.get('mac', '')}">${ap.get('mac', '')}</td>
+                        <td data-value="">${ap.get('rtime', '')}</td>
+                        <td>
+                          % if ap['online'] == '1':
+                          <span style="color:#27b600">在线</span>
+                          % else:
+                          <span style="color:#f74646;">离线</span>
+                          % endif
+                        </td>
+                        <td data-value="${ap.get('vendor', '').strip()}">
+                            % if ap.get('vendor', '').strip()== 'hanming' or ap.get('vendor', '').strip() == 'Hanming':
+                            <i class="vendor hanming"></i>
+                            % elif ap.get('vendor', '').strip() == 'ruijie' or ap.get('vendor', '').strip() == 'Ruijie':
+                            <i class="vendor ruijie"></i>
+                            % elif ap.get('vendor', '').strip() == 'h3c' or ap.get('vendor', '').strip() == 'H3C':
+                            <i class="vendor h3c"></i>
+                            % elif ap.get('vendor', '').strip() == 'huawei' or ap.get('vendor', '').strip() == 'Huawei':
+                            <i class="vendor huawei"></i>
+                            % elif ap.get('vendor', '').strip() == 'xinrui' or ap.get('vendor', '').strip() == 'Xinrui':
+                            <i class="vendor xinrui"></i>
+                            % else:
+                            ${ap.get('vendor', '')}
+                            % endif
+                            <input type="hidden" value="${ap['vendor']}" />
+                        </td>
+                        <td data-value="${ap.get('position', '')}">${ap.get('position', '')}</td>
+                        <td data-value="">${ap.get('conns', 0)}</td>
+                        % if ins.is_allowed('update', 'ap'):
+                        <td>
+                            <span class="edit">编辑</span>
+                            <button type="button" class="btnGrayAutoMin save">保存</button>
+                            <button type="button" class="btnGrayAutoMin cancel">取消</button>
+                            % if ap['resource'] is None:
+                            <span class="error">(*待绑定)</span>
+                            % endif
+                        </td>
+                        % endif
+                    </tr>
+                    % endfor
+                </table>
+                <div class="page">
+                    <input type="button" value="跳转" class="btnWhiteSmall jump" />
+                    <input type="text" class="pagesize" placeholder="1" />
+                    <input type="button" value="下一页" class="btnWhiteSmall next" />
+                    <div>
+                        <span class="nowpage">1</span> /
+                        <span class="pagecount">
+                        % if page_count==0:
+                        1
+                        % else:
+                        ${page_count}
+                        % endif
+                        </span>
+                    </div>
+                    <input type="button" value="上一页" class="btnWhiteSmall prev" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%block name="aside">
+    <%include file="modal.html" />
+</%block>
+
+<%block name="jscode">
+    <script type="text/javascript" src="/static/js/lib/ajaxfileupload.js"></script>
+</%block>

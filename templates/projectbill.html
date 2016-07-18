@@ -1,0 +1,296 @@
+## bill.html
+<%inherit file="base.html" />
+
+<div class="wrapper">
+    <input type="hidden" value="${location}" id="location" />
+    <!--导航-->
+    <%include file="nav.html" />
+    <!--右侧功能栏-->
+    <div class="projects">
+        <div class="tabbox">
+            <div class="bread">
+                <%include file="bread_nav.html" args="location=location,ins=ins,suffix='计费模块'"/>
+            </div>
+        </div>
+        <div class="tabbox ns_bill">
+            <div class="toolnav">
+                <h3>查询统计</h3>
+            </div>
+            <div class="bill_check">
+                <div><label>时间：</label><span class="bill_em"><input type="text" id="dateStart" value="${datetime.now().strftime('%Y-%m-%d')}" />--<input type="text" id="dateEnd" value="${datetime.now().strftime('%Y-%m-%d')}" /></span></div>
+                <div><label>按账户类型：</label><span id="webType"><em class="on">全部</em>
+                    % for wt in web_types:
+                    <em data-value="${wt.id}">${wt.name}</em>
+                    % endfor
+                </span></div>
+                <div><label>按套餐类型：</label><span id="fee"><em class="on">全部</em>
+                    % for p in policys:
+                    <em data-value="${p}">${p}元</em>
+                    % endfor
+                    <em data-value="0">免费</em></span></div>
+                <div><label>按支付方式：</label><span id="platform"><em class="on">全部</em>
+                    <em data-value="wxpay">微信</em>
+                    <em data-value="alipay">支付宝</em>
+                </span></div>
+                <div><label>模式：</label><span id="mode"><em class="on">全部</em><em>消费</em><em>收款</em></span></div>
+                <button type="button" class="btnBlueSmall" id="billSearch">查询</button>
+            </div>
+            <div class="toolnav">
+                <h4>收款统计</h4>
+            </div>
+            <div class="bill_total">
+                <p class="mw880">
+                  <span>本期：<em class="green">${receipt['current']}</em>元</span>
+                  <span>上期：<em class="blue">${receipt['last']}</em>元</span>
+                  <span>总计：<em class="red">${receipt['total']}</em>元</span>
+                </p>
+            </div>
+            % if ins.is_allowed('create', 'pay'):
+            <div class="btngroups"><button type="button" class="btnGraySmall mouthExport">按月财务统计表导出</button><button type="button" class="btnGraySmall">导出报表</button></div>
+            % endif
+        </div>
+        <div class="tabbox ns_bill">
+            <div class="toolnav">
+                <h3>设置</h3>
+            </div>
+            <div class="toolnav">
+                <h4>上网类型</h4>
+            </div>
+            <div class="bill_settings userType">
+                % if ins.is_allowed('create', 'pay'):
+                <div class="btngroups"><button type="button" class="btnGraySmall addbtn">新增</button></div>
+                % endif
+                <input type="hidden" id="userTypeLen" value="${len(web_types)}" />
+                <div class="bill_tab">
+                    % for wt in web_types:
+                    % if loop.first:
+                    <span class="on" data-user-type-id="${wt.id}">类型${loop.index + 1}：${wt.name}
+                        % if loop.index > 0:
+                        <i></i>
+                        % endif
+                    </span>
+                    % else:
+                    <span data-user-type-id="${wt.id}">类型${loop.index + 1}：${wt.name}<i></i></span>
+                    % endif
+                    % endfor
+                </div>
+            </div>
+            <div class="toolnav">
+                <h4>可用套餐类型选择</h4>
+            </div>
+            <div class="bill_settings packageType">
+                % if ins.is_allowed('create', 'pay'):
+                <div class="btngroups"><button type="button" class="btnGraySmall addbtn">新增</button></div>
+                % endif
+                <div class="bill_tab">
+                    % for policy in pay_policys:
+                    <span data-pay-id="${policy.id}">${policy.label}<i></i></span>
+                    % endfor
+                </div>
+            </div>
+            <div class="toolnav">
+                <h4>收款账户设置</h4>
+            </div>
+            <div class="bill bill_settings">
+                <ul class="bill_charge" id="billCharge">
+                    <li>
+                        <h4><i class="wx"></i>微信支付</h4>
+                        <p>请输入微信账号</p>
+                        % if ins.is_allowed('update', 'pay'):
+                        <div data-platform="wechat"><input type="text" style="width: 280px; margin-right: 5px;" /><button type="button" class="btnBlueSmall" style="width: 64px;">保存</button></div>
+                        % endif
+                    </li>
+                    <li id="alipay">
+                        <h4><i class="ali"></i>支付宝支付</h4>
+                        <p>支付宝账号</p>
+                        <div>
+                          % if alipay_account:
+                          <span>${alipay_account['seller_id']}</span>
+                          % endif
+                          % if ins.is_allowed('update', 'pay'):
+                          <button type="button" class="btnBlueSmall">编辑</button>
+                          % endif
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="tabbox ns_table" id="billlist">
+            <div class="toolnav">
+                <h3>收款纪录</h3>
+                <div class="toolbox">
+                    <div class="search"><input type="text" placeholder="按用户账号搜索" /><button type="button"><i class="searchIcoGray"></i></button></div>
+                </div>
+            </div>
+            <div class="areabox">
+                <table>
+                    <tr>
+                        <th>手机号</th>
+                        <th>业务员</th>
+                        <th>类型</th>
+                        <th>金额</th>
+                        <th>时间</th>
+                        <th>备注</th>
+                    </tr>
+                    % for r in records:
+                    <tr>
+                        <td>${r.mobile}</td>
+                        <td>---</td>
+                        % if r.platform == 'alipay':
+                        <td>支付宝</td>
+                        % else:
+                        <td>微信</td>
+                        % endif
+                        <td>${r.fee}</td>
+                        <td>${r.ctime.strftime('%Y-%m-%d')}</td>
+                        <td>${r.note}</td>
+                    </tr>
+                    % endfor
+                </table>
+                <div class="page">
+                    <input type="button" value="跳转" class="btnWhiteSmall jump" />
+                    <input type="text" class="pagesize" placeholder="1" />
+                    <input type="button" value="下一页" class="btnWhiteSmall next" />
+                    <div>
+                        <span class="nowpage">1</span> /
+                        <span class="pagecount">
+                        % if page_count==0:
+                        1
+                        % else:
+                        ${page_count}
+                        % endif
+                        </span>
+                    </div>
+                    <input type="button" value="上一页" class="btnWhiteSmall prev" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%block name="aside">
+    <div class="modal fade" id="modalUserType">
+        <div class="modal_user_type modal_body">
+            <h3>新增上网类型</h3>
+            <ul class="vertical">
+                <li>
+                    <label><i>*</i>上网类型：</label>
+                    <span class="veright"><div class="verify"><input type="text" class="matchVerify shouldVerify" name="nameType" /></div></span>
+                </li>
+            </ul>
+            <div class="btngroups"><button type="button" class="btnBlue add">确定</button></div>
+            <i class="msg"></i>
+            <span class="closed">X</span>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalPackageType">
+        <div class="modal_package_type modal_body">
+            <h3>新增套餐类型</h3>
+            <ul class="vertical">
+                <li>
+                    <label>&nbsp;</label>
+                    <span class="veright">
+                        <ul class="adsnav">
+                            <li class="on">小时</li>
+                            <li>天</li>
+                        </ul>
+                    </span>
+                </li>
+                <li class="vtime">
+                    <label><i>*</i>时间<em>（小时/天数）</em>：</label>
+                    <span class="veright"><div class="verify"><input type="text" class="matchVerify shouldVerify checkFloat" name="time" placeholder="支持两位小数，例如：1.52" /></div></span>
+                </li>
+                <li>
+                    <label><i>*</i>金额<em>（元）</em>：</label>
+                    <span class="veright"><div class="verify"><input type="text" class="matchVerify shouldVerify checkFloat" name="price" placeholder="支持两位小数，例如：1.52" /></div></span>
+                </li>
+                <li>
+                    <label>终端<em>（数）</em>：</label>
+                    <span class="veright">
+                        <div class="amount">
+                            <button type="button" class="btnWhiteSmall reduceOne">-</button>
+                            <input type="text" name="ends" value="2" data-type="int" />
+                            <button type="button" class="btnWhiteSmall addOne">+</button>
+                        </div>
+                    </span>
+                </li>
+                <li>
+                    <label>到期时间：</label>
+                    <span class="veright"><div class="verify"><input type="text" name="expired" class="datepicker" placeholder="长期" /></div></span>
+                </li>
+                <li>
+                    <label>套餐名称：</label>
+                    <span class="veright"><div class="verify"><input type="text" name="label" /></div></span>
+                </li>
+            </ul>
+            <div class="btngroups"><button type="button" class="btnBlue add">确定</button></div>
+            <i class="msg"></i>
+            <span class="closed">X</span>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalpay">
+        <div class="modal_pay modal_body">
+            <h3>支付宝设置</h3>
+            <ul class="vertical">
+                % if alipay_account:
+                <li><label>商户支付宝(ID)：</label><span class="veright" data-value="${alipay_account['seller_id']}"><div class="verify"><input type="text" class="matchVerify shouldVerify" name="id" /></div></span></li>
+                <li><label>合作者身份(PID)：</label><span class="veright" data-value="${alipay_account['partner']}"><div class="verify"><input type="text" class="matchVerify shouldVerify" name="pid" /></div></span></li>
+                <li><label>安全校验码：</label><span class="veright" data-value="${alipay_account['key']}"><div class="verify"><input type="text" class="matchVerify shouldVerify" name="skey" /></div></span></li>
+                <li><label>商家私钥：</label><span class="veright" data-value="${alipay_account['rsa_private_key_url']}">
+                    <div class="file">
+                        <input type="hidden" class="matchVerify shouldVerify checkFile" name="rsa" />
+                        <input type="file" class="uploadImg profile" id="rsakey" name="file" />
+                        <button type="button" class="btnGreen">上传私钥文件</button>
+                        <div class="loading"></div>
+                        <em>${alipay_account['rsa_private_key_url']}</em>
+                    </div></span>
+                </li>
+                % else:
+                <li><label>商户支付宝(ID)：</label><span class="veright" data-value=""><div class="verify"><input type="text" class="matchVerify shouldVerify" name="id" /></div></span></li>
+                <li><label>合作者身份(PID)：</label><span class="veright" data-value=""><div class="verify"><input type="text" class="matchVerify shouldVerify" name="pid" /></div></span></li>
+                <li><label>安全校验码：</label><span class="veright" data-value=""><div class="verify"><input type="text" class="matchVerify shouldVerify" name="skey" /></div></span></li>
+                <li><label>商家私钥：</label><span class="veright" data-value="">
+                    <div class="file">
+                        <input type="hidden" class="matchVerify shouldVerify checkFile" name="rsa" />
+                        <input type="file" class="uploadImg profile" id="rsakey" name="file" />
+                        <button type="button" class="btnGreen">上传私钥文件</button>
+                        <div class="loading"></div>
+                        <em></em>
+                    </div></span>
+                </li>
+                % endif
+            </ul>
+            <div class="btngroups"><button type="button" class="btnBlue edit">确定</button></div>
+            <i class="msg"></i>
+            <span class="closed">X</span>
+            <input type="hidden" id="payHid" />
+        </div>
+    </div>
+</%block>
+
+<%block name="jscode">
+    <script type="text/javascript" src="/static/js/lib/ajaxfileupload.js"></script>
+    <script type="text/javascript" src="/static/js/lib/jqueryui.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            // 日期
+            $("#dateStart").datepicker({
+                dateFormat: 'yy-mm-dd',
+                onClose: function(selectedDate) {
+                    $("#dateEnd").datepicker("option", "minDate", selectedDate);
+                }
+            });
+            $("#dateEnd").datepicker({
+                dateFormat: 'yy-mm-dd',
+                onClose: function(selectedDate) {
+                    $("#dateStart").datepicker("option", "maxDate", selectedDate);
+                }
+            });
+            $(".datepicker").datepicker({
+                dateFormat: 'yy-mm-dd'
+            });
+        });
+    </script>
+</%block>

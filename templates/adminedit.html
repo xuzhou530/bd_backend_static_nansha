@@ -1,0 +1,67 @@
+## adminadd.html
+<%inherit file="base.html" />
+
+<div class="wrapper">
+    <!--导航-->
+    <%include file="nav.html" />
+    <!--右侧功能栏-->
+    <div class="projects">
+        <div class="tabbox">
+            <div class="bread">
+                <h2>账户管理</h2>
+                <div class="widget">
+                    <button class="btnBlueSmall" id="roleSave">保存</button>
+                    <a href="/admin.html" class="btnGraySmall">取消</a>
+                </div>
+            </div>
+        </div>
+        <div class="tabbox ns_role">
+            <div class="toolnav">
+              <h3>角色选择：<select class="role_sel" id="role">
+                  % for r in role:
+                  <option value="${r['_id']}">${r['_id']}</option>
+                  % endfor
+              </select></h3>
+            </div>
+            <div class="toolnav">
+                <h3>功能选择：</h3>
+            </div>
+            <%
+              r = ins.mdb.role.find_one({'role': role[0]['_id']}, {'_id': 0})
+              def check_allowed(operate, resource):
+                  for a in r['acl']:
+                      if a['resource'] == resource and operate in a['operation']:
+                          return True
+                  return False
+
+              def check_resource(resource):
+                  for a in r['acl']:
+                      if a['resource'] == resource and len(a['operation']) > 0:
+                              return True
+                  return False
+            %>
+            <div class="areabox" id="roleOpra">
+                % for p in permission:
+                <p><label data-resource="${p['resource']}">
+                    % if check_resource(p['resource']):
+                    <i class="headunchk headchk"></i>
+                    % else:
+                    <i class="headunchk"></i>
+                    % endif
+                    ${p['label']}</label></p>
+                <div>
+                    % for op in p['operation']:
+                    <label data-operation="${op['name']}">
+                      % if check_allowed(op['name'], p['resource']):
+                      <i class="unchk chk"></i>
+                      % else:
+                      <i class="unchk"></i>
+                      % endif
+                      ${op['label']}</label>
+                    % endfor
+                </div>
+                % endfor
+            </div>
+        </div>
+    </div>
+</div>

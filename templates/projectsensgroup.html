@@ -1,0 +1,107 @@
+## projectsens.html
+<%inherit file="base.html" />
+
+<div class="wrapper">
+    <input type="hidden" value="${location}" id="location" />
+    <input type="hidden" value="${group_id}" id="groupId" />
+    <!--导航-->
+    <%include file="nav.html" />
+    <!--右侧功能栏-->
+    <div class="projects">
+        <div class="tabbox">
+            <div class="bread">
+                <%include file="bread_nav.html" args="location=location,ins=ins,suffix='感知组'"/>
+            </div>
+        </div>
+        <div class="tabbox ns_table" id="sensRoom">
+            <div class="sensroom">
+                <div class="sensHeader">
+                    <input type="text" class="datepicker" value="2016-02-21 12:30" id="dateStart" />--<input type="text" class="datepicker" value="2016-02-21 12:30" id="dateEnd" />
+                    <span>总感知人数：<em>${len(clients)}</em></span>
+                </div>
+                <div class="sensContent">
+                    <div class="mw880">
+                        <button type="button" class="btnGraySmall addbtn">新增AP</button>
+                        % for ap in aps:
+                        <div class="sensap">
+                            <div>
+                                <label>AP名称：</label>
+                                <span>${ap['name']}</span>
+                            </div>
+                            <em data-ap-id="${str(ap['_id'])}">删除</em>
+                        </div>
+                        % endfor
+                    </div>
+                </div>
+            </div>
+            <div class="toolnav">
+                <div class="toolbox">
+                    <div class="search"><input type="text" placeholder="输入绑定名/MAC" /><button type="button"><i class="searchIcoGray"></i></button></div>
+                </div>
+            </div>
+            <div class="areabox">
+                <table>
+                    <tr>
+                        <th>绑定名</th>
+                        <th>MAC</th>
+                        <th>感知时长</th>
+                        <th>平均强度</th>
+                        <th>出现频率</th>
+                    </tr>
+                    % for client in clients:
+                    <tr>
+                      <td>名字</td>
+                      <td>${client['client_mac']}</td>
+                      <td>${':'.join([v.rjust(2, '0') for v in client['age'].split(':')])}</td>
+                      <td>${''.join(['-'] + list(str(client['total_rssi'] / client['cnt']))[1:])}</td>
+                      <td>${client['cnt']}</td>
+                    </tr>
+                    % endfor
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%block name="aside">
+    <div class="modal fade" id="modalAP">
+        <div class="modal_ap modal_body">
+            <h3>新增AP</h3>
+            <ul class="vertical">
+                <li><label><i>*</i>选择AP：</label>
+                    <span class="veright">
+                        <div class="checklist height358">
+                            <dl></dl>
+                        </div>
+                    </span>
+                </li>
+            </ul>
+            <div class="btngroups"><button type="button" class="btnBlue add">确定</button></div>
+            <i class="msg"></i>
+            <span class="closed">X</span>
+        </div>
+    </div>
+</%block>
+
+<%block name="jscode">
+    <script type="text/javascript" src="/static/js/lib/jqueryui.min.js"></script>
+    <script type="text/javascript" src="/static/js/lib/jquery-ui-timepicker-addon.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $("#dateStart").datetimepicker({
+                dateFormat: 'yy-mm-dd',
+                stepMinute: 10,
+                onClose: function(selectedDate) {
+                    $("#dateEnd").datepicker("option", "minDate", selectedDate);
+                }
+            });
+            $("#dateEnd").datetimepicker({
+                dateFormat: 'yy-mm-dd',
+                stepMinute: 10,
+                onClose: function(selectedDate) {
+                    $("#dateStart").datepicker("option", "maxDate", selectedDate);
+                }
+            });
+        });
+    </script>
+</%block>

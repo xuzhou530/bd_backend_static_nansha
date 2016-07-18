@@ -1,0 +1,21 @@
+<div class="nav">
+    <h3><a href="/index.html" data-target="index"><i class="navProjectIco"></i>项目管理</a></h3>
+    <!--<ul>-->
+        <!--<li><a href="/index.html" data-target="index">所有管理&lt;!&ndash;<span>150</span>&ndash;&gt;</a></li>-->
+        <!--<li><a href="/projectwifi.html?type.id=1" data-target="project">租房wifi&lt;!&ndash;<span>150</span>&ndash;&gt;</a></li>-->
+        <!--<li><a href="/projectwifi.html?type.id=2" data-target="project">商户wifi&lt;!&ndash;<span>150</span>&ndash;&gt;</a></li>-->
+        <!--<li><a href="/projectwifi.html?type.id=3" data-target="project">公共wifi&lt;!&ndash;<span>150</span>&ndash;&gt;</a></li>-->
+        <!--<li><a href="/projectwifi.html?type.id=4" data-target="project">无线专网&lt;!&ndash;<span>150</span>&ndash;&gt;</a></li>-->
+    <!--</ul>-->
+    <h3><a href="/policy.html" data-target="policy"><i class="navPolicyIco"></i>网络管理</a></h3>
+    % if ins.is_allowed('view', 'ac'):
+    <h3><a href="/ac.html" data-target="ac"><i class="navACIco"></i>AC管理</a></h3>
+    % endif
+    <h3><a href="/ap.html" data-target="ap"><i class="navAPIco"></i>AP管理</a></h3>
+    ##<h3><a href="/fiber.html?type_id=1" data-target="fiber"><i class="navFiberIco"></i>光纤管理</a></h3>
+    <h3><a href="/user.html" data-target="user"><i class="navUsersIco"></i>总用户管理</a></h3>
+    ##<h3><a href="/device.html" data-target="device"><i class="navWareIco"></i>设备管理</a></h3>
+    <h3><a href="/admin.html" data-target="admin"><i class="navManagerIco"></i>账户管理</a></h3>
+    <h3><a href="javascript:;" data-target="xinwei" class="preventUrl"><i class="navBedataIco"></i>行为数据</a></h3>
+    <h3><a href="javascript:;" data-target="zhanghu" class="preventUrl"><i class="navUserdataIco"></i>账户数据</a></h3>
+</div>

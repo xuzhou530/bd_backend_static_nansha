@@ -1,0 +1,168 @@
+## projectcard.html
+<%inherit file="base.html" />
+
+<div class="wrapper">
+    <input type="hidden" value="${resource._location}" id="location" />
+    <!--导航-->
+    <%include file="nav.html" />
+    <!--右侧功能栏-->
+    <div class="projects">
+        <div class="tabbox">
+            <div class="bread">
+                <%include file="bread_nav.html" args="location=location,ins=ins"/>
+                <div class="widget">
+                    <a href="/projectinfo.html?location=${location}" class="btnBlueSmall simbtn">查看项目信息</a>
+                    <a href="javascript:;" class="btnBlueSmall" id="custom">自定义</a>
+                </div>
+            </div>
+        </div>
+        <div class="tabbox ns_form">
+            <div class="toolnav">
+                <h3>基本信息</h3>
+            </div>
+            <div class="areabox">
+                <ul class="horizon">
+                    <li>责任人：<span>${resource.owner}</span></li>
+                    <li>地址：<span>${resource.address}</span></li>
+                    <li>电话：<span>${resource.mobile}</span></li>
+                    <li>属性：<span>${resource.type.title}</span></li>
+                    ##<li>ID：<span>${resource._location.split(',')[-1]}</span></li>
+                    <li>开通日期：<span>${resource.ctime.strftime('%Y-%m-%d')}</span></li>
+                </ul>
+                <ul class="horizon">
+                    <li>总用户数：<span>${total_user}</span></li>
+                    <li>在线人数：<span>${total.get('conns', 0)}</span></li>
+                    ##<li>管理员：<span>${manager_num}</span></li>
+                    <li>AP总数：<span>${ap_count}</span></li>
+                    <li>设备故障：<span>${total.get('offlines', 0)}</span></li>
+                    ##<li>项目数：<span>${len(resources)}</span></li>
+                </ul>
+            </div>
+        </div>
+        % if resource.type_id == 9:
+        <div class="tabbox ns_subtab">
+            <div class="toolnav">
+                <h3>子项目列表</h3>
+                <div class="toolbox">
+                    % if ins.is_allowed('create', 'resource'):
+                    <a type="button" class="btnGraySmall addac" href="/projectresourceedit.html?location=${location}">新增</a>
+                    % endif
+                    <div class="search"><input type="text" placeholder="输入搜索内容" /><button type="button"><i class="searchIcoGray"></i></button></div>
+                </div>
+            </div>
+            % if resources:
+              <div class="areabox">
+                  % for r in resources:
+                  % if r.offlines > 0:
+                  <a href="/projectcard.html?location=${r._location}" class="magnet error">
+                  % else:
+                  <a href="/projectcard.html?location=${r._location}" class="magnet">
+                  % endif
+                  <div class="name">
+                    % if len(r.name) > 10:
+                    ${''.join(list(r.name)[:10] + ['...'])}
+                    % else:
+                    ${r.name}
+                    % endif
+                  </div><div class="ap">AP：${r.ap_count}</div></a>
+                  % endfor
+              </div>
+              % if len(resources) > 4:
+              <div class="mw880" style="overflow: hidden;">
+                  <span class="more">更多<i class="aDwn"></i></span>
+              </div>
+              % endif
+            % endif
+        </div>
+        % endif
+        <div class="tabbox ns_card">
+            <div class="toolnav">
+                <h3>功能列表</h3>
+            </div>
+            <div class="areabox">
+                % if not resource:
+                <a href="/projectresource.html?location=${location}" class="secAgent"><i></i><h6>代理商管理</h6></a>
+                % endif
+                % if resource:
+                <a href="/projectuser.html?location=${location}" class="secUser"><i></i><h6>用户列表</h6></a>
+                % endif
+                <a href="/projectaplist.html?location=${location}" class="secAP"><i></i><h6>AP列表</h6></a>
+                % if resource:
+                <a href="/projectpn.html?location=${location}" class="secDevice"><i></i><h6>网络配置</h6></a>
+                % endif
+                % if resource:
+                <a href="/projectbill.html?location=${location}" class="secBill"><i></i><h6>计费模块</h6></a>
+                % endif
+                % if resource:
+                <a href="/projectmsg.html?location=${location}" class="secNews"><i></i><h6>新闻公告</h6></a>
+                % endif
+                <a href="/projectsens.html?location=${location}" class="secSens"><i></i><h6>感知分析</h6></a>
+                ##<a href="/projectaccess.html?location=${location}" class="preventUrl"><i></i><h6>访问数据</h6></a>
+                ##<a href="/projectads.html?location=${location}" class="secAD"><i></i><h6>广告推送</h6></a>
+                <a href="/projecth5page.html?location=${location}" class="secH5"><i></i><h6>H5页面管理</h6></a>
+            </div>
+        </div>
+
+        <div class="tabbox ns_device">
+            <div class="areabox">
+                <ul class="deviceNav">
+                    <li>设备图</li>
+                    % if resource.plans and ins.is_allowed('view', 'plan'):
+                      % for p in json.loads(resource.plans):
+                      % if loop.index == 0:
+                      <li class="on">${p['name']}</li>
+                      % else:
+                      <li>${p['name']}</li>
+                      % endif
+                      % endfor
+                    % endif
+                </ul>
+                % if ins.is_allowed('create', 'plan'):
+                <div class="ns_xy">
+                    <div class="axy">
+                        <dl>
+                            <dd class="mm">MAC地址：<span><input type="text" name="mac" class="matchVerify shouldVerify checkMac" /></span></dd>
+                            <dd style="float: right;"><button type="button" class="btnGraySmall quit">取消</button><button type="button" class="btnBlueSmall add">确定</button><button type="button" class="btnBlueSmall save" style="display: none;">保存</button></dd>
+                        </dl>
+                        <p>提示：填写AP信息前，请先点击施工图片上的AP指示点捕捉位置信息。（x：<em id="ix"></em> , y：<em id="iy"></em>）</p>
+                    </div>
+                    <button type="button" class="btnBlueSmall addap">新增AP</button>
+                </div>
+                % endif
+                <div class="ns_deCtx">
+                    % if resource.plans and ins.is_allowed('view', 'plan'):
+                    % for p in json.loads(resource.plans):
+                    <div class="ns_dedo">
+                        <img src="${p['imgurl']}" />
+                        % for pnt in ins.mdb.plan.find({'_location': resource._location, 'imgurl': p['imgurl']}):
+                        % if aps.get(pnt['mac'].upper()) == '1':
+                        <i class="doGreen" data-left="${pnt['left']}" data-top="${pnt['top']}" style="left: ${pnt['left']}px; top:${pnt['top']}px;"><em data-mac="${pnt['mac']}" data-x="${pnt['pos_x']}" data-y="${pnt['pos_y']}" data-id="${str(pnt['_id'])}"></em></i>
+                        % else:
+                        <i class="doRed" data-left="${pnt['left']}" data-top="${pnt['top']}" style="left: ${pnt['left']}px; top:${pnt['top']}px;"><em data-mac="${pnt['mac']}" data-x="${pnt['pos_x']}" data-y="${pnt['pos_y']}" data-id="${str(pnt['_id'])}"></em></i>
+                        % endif
+                        % endfor
+                    </div>
+                    % endfor
+                    % endif
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%block name="aside">
+<div class="modal fade" id="modalCustom">
+    <div class="modal_custom modal_body">
+        <img src="../static/images/projects/bui16.png" style="display: block;" />
+        <img src="../static/images/projects/bui17.png" style="display: block;" />
+        <img src="../static/images/projects/bui18.png" style="display: block;" />
+        <span class="closed">X</span>
+    </div>
+</div>
+<div class="modal fade" id="modalImg">
+    <div class="modal_img modal_ele">
+        <img src="" />
+        <span class="closed">X</span>
+    </div>
+</div>
+</%block>

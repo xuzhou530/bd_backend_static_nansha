@@ -1,0 +1,148 @@
+## projectuserinfo.html
+<%inherit file="base.html" />
+
+<div class="wrapper">
+    <input type="hidden" id="location" value="${location}" />
+    <input type="hidden" id="mask" value="${mask}" />
+    <input type="hidden" id="userId" value="${user_id}" />
+    <!--导航-->
+    <%include file="nav.html" />
+    <!--右侧功能栏-->
+    <div class="projects">
+        <div class="tabbox">
+            <div class="bread">
+                <%include file="bread_nav.html" args="location=location,ins=ins,suffix='用户详情'"/>
+                % if ins.is_allowed('update', 'user'):
+                <div class="widget">
+                    <button type="button" class="btnGraySmall" id="userinfoEdit">编辑</button>
+                    <button type="button" class="btnBlueSmall" id="userinfoSave" style="display: none;">保存</button>
+                    <button type="button" class="btnGraySmall" id="userinfoQuit" style="display: none;">取消</button>
+                </div>
+                % endif
+            </div>
+        </div>
+        <div class="tabbox ns_infouser" id="userinfo">
+            <div class="areabox">
+                <ul class="vertical">
+                    % if mask == 1:
+                      % for h in headers:
+                        % if h['is_profile'] == 1:
+                        <li>
+                            <label>${h['title']}：</label>
+                            <span class="veright sue" data-value="${getattr(account, h['column'])}" data-type="${h['type']}" name="${h['column']}">
+                            % if h['type'] == 'img':
+                            <img src="${getattr(account, h['column'])}" class="imginfo" />
+                            <div class="file" style="display: none;">
+                                <input type="hidden" />
+                                <input type="file" class="uploadImg proImg" id="${h['column']}" imgElementId="img${h['column']}" name="uploadImg" />
+                                <button type="button" class="btnGreen">选择图片</button>
+                                <div class="loading"></div>
+                            </div>
+                            <div class="showImg" style="display: none;">
+                                <img src="" id="img${h['column']}" />
+                                <i class="deluploadImg"></i>
+                            </div>
+                            % else:
+                            ${getattr(account, h['column'])}
+                            % endif
+                            </span>
+                        </li>
+                        % endif
+                      % endfor
+                    % endif
+                    <li>
+                        <label>关联账号：</label>
+                        <span class="veright">
+                            % if mask > 1:
+                            <div class="account">账号1：${account.user}</div>
+                            % else:
+                            % for r in relates:
+                            <div class="account">账号${loop.index + 1}：${r.user}</div>
+                            % endfor
+                            % endif
+                        </span>
+                    </li>
+                    % if mask == 4:
+                    <li>
+                        <label>管理创建者：</label>
+                        <span class="veright"></span>
+                    </li>
+                    <li>
+                        <label>创建时间：</label>
+                        <span class="veright"></span>
+                    </li>
+                    % endif
+                    % if mask > 1:
+                    <li>
+                        <label>到期时间：</label>
+                        <span class="veright sue" data-value="${account.expired}" name="expired" data-type="datetime">${account.expired}</span>
+                    </li>
+                    <li>
+                        <label>终端数：</label>
+                        <span class="veright sue" data-value="${account.ends}" name="ends" data-type="int">${account.ends}</span>
+                    </li>
+                    <li>
+                        <label>手机号：</label>
+                        <span class="veright sue" data-value="${account.mobile}" name="mobile" data-type="string">${account.mobile}</span>
+                    </li>
+                    <li>
+                        <label>密码：</label>
+                        <span class="veright sue pwdtip" data-tip="${account.password}" data-value="${account.password}" data-type="password" name="password">***</span>
+                    </li>
+                    % endif
+                    % if mask == 1:
+                    <li>
+                        <label>专网权限：</label>
+                        <span class="veright">
+                            % for p in pns:
+                            <div class="premission">${p['name']}</div>
+                            % endfor
+                        </span>
+                    </li>
+                    <li>
+                        <label>专网信息：</label>
+                        <span class="veright">
+                            <ul class="vertical">
+                                % for h in headers:
+                                  % if h['is_profile'] == 0:
+                                  <li>
+                                      <label>${h['title']}：</label>
+                                      <span class="veright sue" data-value="${getattr(account, h['column'])}" data-type="${h['type']}" name="${h['column']}">
+                                      % if h['type'] == 'img':
+                                      <img src="${getattr(account, h['column'])}" class="imginfo" />
+                                      <div class="file" style="display: none;">
+                                          <input type="hidden" />
+                                          <input type="file" class="uploadImg proImg" id="${h['column']}" imgElementId="img${h['column']}" name="uploadImg" />
+                                          <button type="button" class="btnGreen">选择图片</button>
+                                          <div class="loading"></div>
+                                      </div>
+                                      <div class="showImg" style="display: none;">
+                                          <img src="" id="img${h['column']}" />
+                                          <i class="deluploadImg"></i>
+                                      </div>
+                                      % else:
+                                      ${getattr(account, h['column'])}
+                                      % endif
+                                      </span>
+                                  </li>
+                                  % endif
+                                % endfor
+                            </ul>
+                        </span>
+                    </li>
+                    % endif
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%block name="aside">
+    <%include file="imgModal.html" />
+</%block>
+
+<%block name="jscode">
+    <script type="text/javascript" src="/static/js/lib/ajaxfileupload.js"></script>
+    <script type="text/javascript" src="/static/js/lib/jqueryui.min.js"></script>
+    <script type="text/javascript" src="/static/js/lib/jquery-ui-timepicker-addon.js"></script>
+</%block>

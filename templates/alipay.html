@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+      td {
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <center>
+      <form action="/alipay" method="get">
+        <table>
+          <caption><b>测试支付宝即时到账接口</b></caption>
+          <tr>
+            <td>
+              <label for="">商品名:</label>
+            </td>
+            <td>
+              <input id="" type="text" name="subject" style="width:300px">
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="">总价:</label>
+            </td>
+            <td>
+              <input id="" type="text" name="total_fee" value="0.01" style="width:300px">
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="">return_url:</label>
+            </td>
+            <td>
+              <input id="" type="text" name="return_url" value="http://183.63.152.237:8083/alipay.html" style="width:300px">
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="">notify_url:</label>
+            </td>
+            <td>
+              <input id="" type="text" name="notify_url" value="http://183.63.152.237:8083/alipay/notify" style="width:300px">
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>
+              <input type="submit" value="提交订单">
+            </td>
+          </tr>
+        </table>
+      </form>
+    </center>
+  </body>
+</html>

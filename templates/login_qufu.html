@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>区府管理后台登录</title>
+    <link rel="stylesheet" href="/static/css/login.css" />
+    <script type="text/javascript" src="/static/js/lib/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/js/atagscloud.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $('#atagscloud').activiTag();
+            // login
+            $('.lg_submit').click(function(){
+                if($('input[name=name]').val()==''){$('form h2 i').text('请输入用户名！'); return false;}
+                if($('input[name=password]').val()==''){$('form h2 i').text('请输入密码！'); return false;}
+                $('form').submit();
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <div id="atagscloud">
+        <!--<a href="javascript:;" class="blue" style="bottom: 0px; left: 640px; opacity: 0.3; z-index: 10;"><span><em>无线城市</em></span></a>-->
+        <!--<a href="javascript:;" class="orange" style="bottom: 28px; left: 140px;  opacity: 0.4; z-index: 11;"><span><em>众拓科技</em></span></a>-->
+        <!--<a href="javascript:;" class="blue" style="bottom: 40px; left: 347px; opacity: 0.6; z-index: 12;"><span><em>智能小区</em></span></a>-->
+        <!--<a href="javascript:;" class="orange" style="bottom: 80px; left: 500px; opacity: 0.4; z-index: 13;"><span><em>厦门鼓浪屿wiFi覆盖</em></span></a>-->
+        <!--<a href="javascript:;" class="blue" style="bottom: 130px; left: 652px; opacity: 0.3; z-index: 14;"><span><em>白云皮具批发市场</em></span></a>-->
+        <!--<a href="javascript:;" class="orange" style="bottom: 176px; left: 95px; opacity: 0.6; z-index: 15;"><span><em>南横村出租房</em></span></a>-->
+        <!--<a href="javascript:;" class="blue" style="bottom: 263px; left: 147px; opacity: 1; z-index: 16;"><span><em>十二道科技</em></span></a>-->
+        <!--<a href="javascript:;" class="orange" style="bottom: 234px; left: 317px; opacity: 1; z-index: 17;"><span><em>番禺女子学院</em></span></a>-->
+        <!--<a href="javascript:;" class="blue" style="bottom: 300px; left: 321px; opacity: 0.4; z-index: 18;"><span><em>热砂科技</em></span></a>-->
+        <!--<a href="javascript:;" class="orange" style="bottom: 146px; left: 256px; opacity: 1; z-index: 19;"><span><em>风信子无线覆盖</em></span></a>-->
+        <!--<a href="javascript:;" class="blue" style="bottom: 162px; left: 454px; opacity: 1; z-index: 20;"><span><em>南沙无线城市</em></span></a>-->
+    </div>
+    <div class="lg_header">
+        <div class="lg_wrapper">
+            <h1>区府管理后台</h1>
+        </div>
+    </div>
+    <div class="lg_banner">
+        <div class="lg_wrapper">
+            <form action="/login" method="post">
+                ${xsrf_form_html()}
+                <h2>登录<i>
+                    % if reason:
+                    ${reason}
+                    % endif</i>
+                </h2>
+                <ul>
+                    <li><label><i class="userIco"></i>账号：</label><input type="text" name="name" value="${ins.get_secure_cookie('name')}"/></li>
+                    <li><label><i class="pwdIco"></i>密码：</label><input type="password" name="password" /></li>
+                </ul>
+                <p><label>
+                    % if ins.get_secure_cookie('remember'):
+                    <input type="checkbox" name="remember" checked/>记住账号</label>
+                    % else:
+                    <input type="checkbox" name="remember"/>记住账号</label>
+                    % endif
+                  <a href="javascript:;">无法登录？</a></p>
+                <div>
+                    <button type="submit" class="lg_submit">登录</button>
+                    <button type="button" class="lg_free">试用</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="lg_wrapper lg_services">
+        <!--<h2><span>我们能为您提供的</span></h2>-->
+        <ul>
+            <li><i class="sev_a"></i><span>微信、网页、短信<br>多种可增值认证方式</span></li>
+            <li><i class="sev_b"></i><span>用户上网数据<br>筛选搜集</span></li>
+            <li><i class="sev_c"></i><span>用户感知分析<br>WiFi大数据建立</span></li>
+            <li><i class="sev_d"></i><span>微信、网页等丰富的<br>广告营销方式</span></li>
+            <li><i class="sev_e"></i><span>分级管理<br>独立分配下级管理权限</span></li>
+        </ul>
+    </div>
+    <!--<div class="lg_wrapper lg_footer">-->
+        <!--<p>版权所有：广州中国科学院计算机网络信息中心</p>-->
+        <!--<p>电话：020-39393309        邮箱：iot_support@niot.cn</p>-->
+    <!--</div>-->
+</body>
+</html>

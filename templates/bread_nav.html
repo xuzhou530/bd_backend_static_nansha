@@ -1,0 +1,27 @@
+<%page args="location,ins,suffix=None,remain=None">
+<h2>
+<%
+locs = location.split(',')
+%>
+<a href="/index.html">所有项目</a>
+% if location:
+  % for i, loc in enumerate(locs):
+    % if i == (len(locs) - 1) and loc and not suffix and not remain:
+    > <span style="color:#0faee5">${ins.resource(loc).name}</span>
+    % else:
+    > <a href="/projectcard.html?location=${','.join(locs[:i + 1])}">${ins.resource(loc).name}</a>
+    % endif
+  % endfor
+% endif
+
+% if remain:
+  % for title, url in remain:
+  > <a href="${url}">${title}</a>
+  % endfor
+% endif
+
+% if suffix:
+> <span style="color:#0faee5">${suffix}</span>
+% endif
+</h2>
+</%page>

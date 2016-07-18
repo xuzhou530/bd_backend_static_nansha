@@ -1,0 +1,157 @@
+## admin.html
+<%inherit file="base.html" />
+
+<div class="wrapper">
+    <!--导航-->
+    <%include file="nav.html" />
+    <!--右侧功能栏-->
+    <div class="projects">
+        <div class="tabbox">
+            <div class="bread">
+                <h2>账户管理</h2>
+                <div class="widget">
+                    % if ins.is_allowed('update', 'admin'):
+                    <a href="adminedit.html" class="btnBlue">编辑角色</a>
+                    % endif
+                    % if ins.is_allowed('create', 'admin'):
+                    <a href="adminadd.html" class="btnBlue">新增角色</a>
+                    % endif
+                </div>
+            </div>
+        </div>
+        <div class="tabbox accountInfo">
+            <div class="toolnav">
+                <h3>管理员账户信息</h3>
+            </div>
+            <div class="areabox">
+                <ul>
+                    <li><p data-value="${ins.get_session('user')}">${ins.get_session('user')}</p><h4>账号</h4></li>
+                    % if current_user._location and '#' not in current_user._location:
+                    <%
+                      projectname = ''
+                      project = query.filter_by(_location=current_user._location).one_or_none()
+                      if project:
+                        projectname = project.name
+                    %>
+                    <li><p>${projectname}</p><h4>所属项目</h4></li>
+                    % endif
+                    <li><p>${current_user.role}</p><h4>角色</h4></li>
+                    <li><p>${current_user.ctime.strftime('%Y-%m-%d')}</p><h4>创建时间</h4></li>
+                    <li class="accountPwd">
+                        <p data-value="123456">
+                            <span>******</span>
+                            <input type="text" placeholder="请输入新密码" />
+                        </p>
+                        <h4>密码</h4>
+                    </li>
+                </ul>
+                <div class="btns">
+                    <button type="button" class="btnBlueSmall edit">修改密码</button>
+                    <button type="button" class="btnGraySmall quit">取消</button>
+                    <button type="button" class="btnBlueSmall save">保存</button>
+                </div>
+            </div>
+        </div>
+        <div class="tabbox ns_table" id="accountlist">
+            <div class="toolnav">
+                % if ins.is_allowed('view', 'admin'):
+                <h3>项目账户管理</h3>
+                <div class="toolbox">
+                    % if ins.is_allowed('create', 'admin'):
+                    <button type="button" class="btnGraySmall addbtn">新增</button>
+                    % endif
+                    <div class="search"><input type="text" placeholder="搜索账号" /><button type="button"><i class="searchIcoGray"></i></button></div>
+                </div>
+                % endif
+            </div>
+            <div class="areabox">
+              % if ins.is_allowed('view', 'admin'):
+                <table class="centerAlign">
+                    <tr>
+                        <th>账户</th>
+                        <th>密码</th>
+                        <th>所属项目</th>
+                        <th>角色</th>
+                        <th>创建时间</th>
+                        % if ins.is_allowed('update', 'admin'):
+                        <th>操作</th>
+                        % endif
+                    </tr>
+                    % for user in sub_users:
+                    % if user.mask == 0:
+                    <tr class="dab">
+                    % else:
+                    <tr>
+                    % endif
+                        <td data-value="${user.name}">${user.name}</td>
+                        <td data-value=""><em>***</em></td>
+                        % if user._location:
+                        <%
+                          projectname = ''
+                          project = query.filter_by(_location=user._location).one_or_none()
+                          if project:
+                            projectname = project.name
+                        %>
+                        <td data-value="${user._location}">${projectname}</td>
+                        % else:
+                        <td data-value="${user._location}"></td>
+                        % endif
+                        <td data-value="${user.role}">${user.role}</td>
+                        <td data-value="${user.ctime.strftime('%Y-%m-%d')}">${user.ctime.strftime('%Y-%m-%d')}</td>
+                        % if ins.is_allowed('update', 'admin'):
+                        <td>
+                          % if user.mask == 0:
+                          <span class="unforbin">启用</span>
+                          % else:
+                          <span class="forbin">停用</span>
+                          % endif
+                          <span class="edit">编辑</span></td>
+                        % endif
+                    </tr>
+                    % endfor
+                </table>
+                <div class="page">
+                    <input type="button" value="跳转" class="btnWhiteSmall jump" />
+                    <input type="text" class="pagesize" placeholder="1" />
+                    <input type="button" value="下一页" class="btnWhiteSmall next" />
+                    <div>
+                        <span class="nowpage">1</span> /
+                        <span class="pagecount">
+                        % if page_count==0:
+                        1
+                        % else:
+                        ${page_count}
+                        % endif
+                        </span>
+                    </div>
+                    <input type="button" value="上一页" class="btnWhiteSmall prev" />
+                </div>
+              % endif
+            </div>
+        </div>
+    </div>
+</div>
+
+<%block name="aside">
+<div class="modal fade" id="modalAccount">
+    <div class="modal_account modal_body">
+        <h3>新增账户</h3>
+        <ul class="vertical">
+            <li><label><i>*</i>账户：</label><span class="veright"><div class="verify"><input type="text" name="name" class="matchVerify shouldVerify" /></div></span></li>
+            <li><label><i>*</i>所属项目：</label><span class="veright"><div class="autoInput" title="" data-locate=""><em>所属</em></div></span></li>
+            <li><label><i>*</i>角色：</label>
+              <span class="veright"><select id="role">
+                  % for r in roles:
+                  <option value="${r['role']}">${r['role']}</option>
+                  % endfor
+            </select></span></li>
+            <li><label><i>*</i>密码：</label><span class="veright"><div class="verify"><input type="text" name="password" class="matchVerify shouldVerify checkEng" /></div></span></li>
+        </ul>
+        <div class="btngroups"><button type="button" class="btnBlue add">确定</button></div>
+        <i class="msg"></i>
+        <span class="closed">X</span>
+        <input type="hidden" name="idx" />
+        <input type="hidden" name="id" />
+    </div>
+</div>
+</%block>

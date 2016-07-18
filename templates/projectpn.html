@@ -1,0 +1,135 @@
+## projectpn.html
+<%inherit file="base.html" />
+
+<div class="wrapper">
+    <input type="hidden" value="${location}" id="location" />
+    <!--导航-->
+    <%include file="nav.html" />
+    <!--右侧功能栏-->
+    <div class="projects">
+        <div class="tabbox">
+            <div class="bread">
+                <%include file="bread_nav.html" args="location=location,ins=ins,suffix='网络配置'"/>
+            </div>
+        </div>
+        <div class="tabbox ns_table" id="pnlist">
+            <div class="toolnav">
+                <h3>网络配置</h3>
+                % if ins.is_allowed('create', 'policy'):
+                <div class="toolbox">
+                    <button class="btnGraySmall addbtn">新增</button>
+                </div>
+                % endif
+            </div>
+            <div class="areabox">
+                <table class="centerAlign topTdAlign">
+                    <tr>
+                        <th>ID</th>
+                        <th>私有网络</th>
+                        <th>收费方式</th>
+                        <th>SSID</th>
+                        <th>备注</th>
+                        <th>Portal</th>
+                        <th>Appid</th>
+                        <th>Shopid</th>
+                        <th>Secret</th>
+                        % if ins.is_allowed('update', 'policy') and ins.is_allowed('delete', 'policy'):
+                        <th>操作</th>
+                        % endif
+                    </tr>
+                    % for p in pns:
+                    <tr>
+                        <td>${p._location.split(',')[-1]}</td>
+                        <td>
+                            % if p.ispri == 1:
+                            是<input type="hidden" value="1" />
+                            % else:
+                            否<input type="hidden" value="0" />
+                            % endif
+                        </td>
+                        <td>
+                            % if p.policy == 1:
+                            免费<input type="hidden" value="1" />
+                            % else:
+                            收费<input type="hidden" value="0" />
+                            % endif
+                        </td>
+                        <td>${p.ssid}</td>
+                        <td class="wb">${p.note}</td>
+                        <td>${p.portal}</td>
+                        <td class="wb">${p.appid}</td>
+                        <td class="wb">${p.shopid}</td>
+                        <td class="wb">${p.secret}</td>
+                        % if ins.is_allowed('delete', 'policy') and ins.is_allowed('update', 'policy'):
+                        <td><span class="edit">编辑</span><span class="delete">删除</span><input type="hidden" value="${p.id}" /></td>
+                        % endif
+                    </tr>
+                    % endfor
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%block name="aside">
+    <div class="modal fade" id="modalPn">
+        <div class="modal_pn modal_body">
+            <h3>新增网络配置</h3>
+            <p class="notice"><em>注：</em>同一个专网只能有唯一的SSID</p>
+            <ul class="vertical">
+                <li>
+                    <label><i>*</i>私有网络：</label>
+                    <span class="veright">
+                        <select id="pri">
+                            <option value="0">否</option>
+                            <option value="1">是</option>
+                        </select>
+                    </span>
+                </li>
+                <li>
+                    <label><i>*</i>收费方式：</label>
+                    <span class="veright">
+                        <select id="policy">
+                            <option value="0">收费</option>
+                            <option value="1">免费</option>
+                        </select>
+                    </span>
+                </li>
+                <li>
+                    <label><i>*</i>SSID：</label>
+                    <span class="veright"><div class="verify"><input type="text" class="matchVerify" name="ssid" /></div></span>
+                </li>
+                <li>
+                    <label>备注：</label>
+                    <span class="veright"><div class="verify"><input type="text" name="note" /></div></span>
+                </li>
+                <li>
+                    <label><i>*</i>Portal：</label>
+                    <span class="veright"><div class="verify"><input type="text" class="matchVerify" name="portal" /></div></span>
+                </li>
+                <li>
+                    <label>AppId：</label>
+                    <span class="veright"><div class="verify"><input type="text" name="appid" /></div></span>
+                </li>
+                <li>
+                    <label>ShopId：</label>
+                    <span class="veright"><div class="verify"><input type="text" name="shopid" /></div></span>
+                </li>
+                <li>
+                    <label>Secret：</label>
+                    <span class="veright"><div class="verify"><input type="text" name="secret" /></div></span>
+                </li>
+            </ul>
+            <div class="btngroups"><button type="button" class="btnBlue add">确定</button></div>
+            <i class="msg"></i>
+            <span class="closed">X</span>
+            <input type="hidden" name="id" />
+            <input type="hidden" name="idx" />
+            <input type="hidden" name="iidx" />
+        </div>
+    </div>
+</%block>
+
+<%block name="jscode">
+    <script type="text/javascript" src="/static/js/lib/ajaxfileupload.js"></script>
+</%block>

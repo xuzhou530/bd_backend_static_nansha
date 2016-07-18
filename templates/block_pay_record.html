@@ -1,0 +1,22 @@
+<tr>
+  <th>手机号</th>
+  <th>业务员</th>
+  <th>类型</th>
+  <th>金额</th>
+  <th>时间</th>
+  <th>备注</th>
+</tr>
+% for r in paginate.entires:
+<tr>
+  <td>${r.mobile}</td>
+  <td>---</td>
+  % if r.platform == 'alipay':
+  <td>支付宝</td>
+  % else:
+  <td>微信</td>
+  % endif
+  <td>${r.fee}</td>
+  <td>${r.ctime.strftime('%Y-%m-%d')}</td>
+  <td>${r.note}</td>
+</tr>
+% endfor

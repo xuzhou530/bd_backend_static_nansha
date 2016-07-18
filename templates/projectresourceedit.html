@@ -1,0 +1,167 @@
+## projectresourceedit.html
+<%inherit file="base.html" />
+
+<div class="wrapper">
+    <input type="hidden" value="${location}" id="location" />
+    <!--导航-->
+    <%include file="nav.html" />
+    <!--右侧功能栏-->
+    <div class="projects">
+        <div class="tabbox">
+            <div class="bread">
+                <%include file="bread_nav.html" />
+            </div>
+        </div>
+        <div class="tabbox nopdg ns_form">
+            <h4 class="formInfo">
+                <em>资源新增</em>
+                <a href="/projectcard.html?location=${location}">返回</a>
+            </h4>
+            <div class="areabox">
+                <ul class="vertical">
+                    <li>
+                        <label><i>*</i>属性：</label>
+                        <span class="veright">
+                            <select id="resId">
+                                % for rt in sorted(resource_types, key=lambda x: x['id']):
+                                <option value="${int(rt['id'])}">${rt['name']}</option>
+                                % endfor
+                            </select>
+                        </span>
+                    </li>
+                    <li>
+                        <label><i>*</i>名称：</label>
+                      <span class="veright"><div class="verify"><input type="text" name="resName" class="matchVerify shouldVerify" /></div></span>
+                    </li>
+                    <li>
+                    <label>简要说明：</label>
+                        <span class="veright"><textarea name="note" id="note"></textarea></span>
+                    </li>
+                    <li>
+                        <label><i>*</i>楼房/店铺地址：</label>
+                        <span class="veright"><div class="verify"><input type="text" name="resAddress" class="matchVerify shouldVerify" /></div></span>
+                    </li>
+                    <li>
+                        <label><i>*</i>责任人：</label>
+                        <span class="veright"><div class="verify"><input type="text" name="resOwner" class="matchVerify shouldVerify" /></div></span>
+                    </li>
+                    <li>
+                        <label><i>*</i>联系电话：</label>
+                        <span class="veright"><div class="verify"><input type="text" name="resMobile" class="matchVerify shouldVerify checkPhone" /></div></span>
+                    </li>
+                    <li>
+                        <label>Logo：</label>
+                        <span class="veright">
+                            <div class="file">
+                                <input type="hidden" name="resLogo" />
+                                <input type="file" class="uploadImg proImg" id="resLogo" imgElementId="imgResLogo" name="uploadImg" />
+                                <button type="button" class="btnGreen">选择图片</button>
+                                <div class="loading"></div>
+                            </div>
+                            <div class="showImg">
+                                <img src="" id="imgResLogo" />
+                                <i class="deluploadImg"></i>
+                            </div>
+                        </span>
+                    </li>
+                    <li>
+                        <label>营业执照：</label>
+                        <span class="veright">
+                            <div class="file">
+                                <input type="hidden" name="license" />
+                                <input type="file" class="uploadImg proImg" id="license" imgElementId="imgLicense" name="uploadImg" />
+                                <button type="button" class="btnGreen">选择图片</button>
+                                <div class="loading"></div>
+                            </div>
+                            <div class="showImg">
+                                <img src="" id="imgLicense" />
+                                <i class="deluploadImg"></i>
+                            </div>
+                        </span>
+                    </li>
+                    <li>
+                        <label>拓扑图：</label>
+                        <span class="veright">
+                            <div class="file">
+                                <input type="hidden" name="topology" />
+                                <input type="file" class="uploadImg proImg" id="topology" imgElementId="imgTopology" name="uploadImg" />
+                                <button type="button" class="btnGreen">选择图片</button>
+                                <div class="loading"></div>
+                            </div>
+                            <div class="showImg">
+                                <img src="" id="imgTopology" />
+                                <i class="deluploadImg"></i>
+                            </div>
+                        </span>
+                    </li>
+                    <li>
+                        <label>地图位置描点图：</label>
+                        <span class="veright">
+                            <div class="file">
+                                <input type="hidden" name="tracepoint" />
+                                <input type="file" class="uploadImg proImg" id="tracePoint" imgElementId="imgTracePoint" name="uploadImg" />
+                                <button type="button" class="btnGreen">选择图片</button>
+                                <div class="loading"></div>
+                            </div>
+                            <div class="showImg">
+                                <img src="" id="imgTracePoint" />
+                                <i class="deluploadImg"></i>
+                            </div>
+                        </span>
+                    </li>
+                    <li>
+                        <label>实地照片：</label>
+                        <span class="veright">
+                            <div class="file">
+                                <input type="hidden" name="fieldphoto" />
+                                <input type="file" class="uploadImg proImg" id="fieldPhoto" imgElementId="imgFieldPhoto" name="uploadImg" />
+                                <button type="button" class="btnGreen">选择图片</button>
+                                <div class="loading"></div>
+                            </div>
+                            <div class="showImg">
+                                <img src="" id="imgFieldPhoto" />
+                                <i class="deluploadImg"></i>
+                            </div>
+                        </span>
+                    </li>
+                    <li class="exfields">
+                        <label>附加字段：<div><button type="button" class="btnGrayMin" id="addFields">新增字段</button></div></label>
+                        <span class="veright">
+                            <div class="innerTable">
+                                <table>
+                                    <tr>
+                                        <th>表格显示</th>
+                                        <th>名称</th>
+                                        <th>存储标识</th>
+                                        <th>类型</th>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>手机号</td>
+                                        <td>mobile</td>
+                                        <td>字符串(String)</td>
+                                    </tr>
+                                    <!--<tr>-->
+                                        <!--<td><i class="uncheck_s on"></i></td>-->
+                                        <!--<td><input type="text" class="title" /></td>-->
+                                        <!--<td><input type="text" class="column checkEng" /></td>-->
+                                        <!--<td><select class="extype"><option value="string">字符串(String)</option><option value="int">整型(Int)</option><option value="float">浮点型(Float)</option><option value="datetime">日期(Date)</option><option value="password">密码(Password)</option><option value="img">图片(Img)</option></select></td>-->
+                                    <!--</tr>-->
+                                </table>
+                            </div>
+                        </span>
+                    </li>
+                </ul>
+                <p class="btnSub pdg60"><button type="button" class="btnBlue" id="addRes">提交</button></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%block name="aside">
+    <%include file="imgModal.html" />
+</%block>
+
+<%block name="jscode">
+    <script type="text/javascript" src="/static/js/lib/ajaxfileupload.js"></script>
+</%block>

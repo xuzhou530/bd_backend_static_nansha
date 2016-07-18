@@ -1,0 +1,116 @@
+## ap.html
+
+<%inherit file="base.html" />
+
+<div class="wrapper">
+    <input type="hidden" name="" id="pms-create-ap" value="${ins.is_allowed('create', 'ap')}">
+    <input type="hidden" name="" id="pms-update-ap" value="${ins.is_allowed('update', 'ap')}">
+    <input type="hidden" name="" id="pms-delete-ap" value="${ins.is_allowed('delete', 'ap')}">
+    <!--导航-->
+    <%include file="nav.html" />
+    <!--右侧功能栏-->
+    <div class="projects">
+        <div class="tabbox">
+            <div class="bread">
+                <h2>AP管理</h2>
+                <div class="widget">
+                    <span class="widinfo bg_green">在线人数：${online_count}</span>
+                    <span class="widinfo bg_red">离线人数：${offline_count}</span>
+                </div>
+            </div>
+        </div>
+        <div class="tabbox ns_table" id="aplist">
+            <div class="toolnav">
+                <h3>AP列表</h3>
+                <div class="toolbox">
+                    <div class="search"><input type="text" placeholder="输入MAC/位置" data-search="" /><button type="button"><i class="searchIcoGray"></i></button></div>
+                </div>
+            </div>
+            % if ins.is_allowed('update', 'ap'):
+            <div class="midCtx">
+                <div class="apbindbox"><span>批量绑定：</span><div class="autoInput autoDom" title="" data-locate=""><em>所属</em></div><button type="button" class="btnBlueSmall" id="apbind">绑定</button><i>*请选择所属项目</i></div>
+            </div>
+            % endif
+            <div class="areabox">
+                <table data-sort="">
+                    <tr class="searchBatch">
+                        % if ins.is_allowed('update', 'ap'):
+                        <th><i class="unchk allchk"></i></th>
+                        % endif
+                        <th column="mac" sort="-1" class="sortOn"><span><em>MAC地址</em><i></i></span></th>
+                        <th><div class="autoInput autoDom" title="" data-locate=""><em>所属</em></div></th>
+                        <th><select data-name="online"><option value="">状态</option><option value="1">在线</option><option value="0">离线</option></select></th>
+                        <th>
+                            <select data-name="vendor"><option value="">品牌</option>
+                                % for k, v in vendors.iteritems():
+                                <option value="${k}">${v}</option>
+                                % endfor
+                            </select>
+                        </th>
+                        <th>位置</th>
+                        <th column="conns" sort="-1" class="sortOn"><span><em>最后连接数</em><i></i></span></th>
+                        % if ins.is_allowed('update', 'ap'):
+                        <th>操作</th>
+                        % endif
+                    </tr>
+                    % for ap in aps:
+                    <tr>
+                        % if ins.is_allowed('update', 'ap'):
+                        <td><i class="unchk"></i></td>
+                        % endif
+                        <td data-value="${ap.get('mac', '')}">${ap.get('mac', '')}</td>
+                        % if ap['resource']:
+                        <td data-value="${ap['resource']._location}" data-title="${ap['resource'].name}">
+                        % else:
+                        <td data-value="" data-title="">
+                        % endif
+                            % if ap['resource']:
+                            ${ap['resource'].name}
+                            % endif
+                        </td>
+                        <td>
+                          % if ap['online'] == '1':
+                          <span style="color:#27b600">在线</span>
+                          % else:
+                          <span style="color:#f74646;">离线</span>
+                          % endif
+                        </td>
+                        <td data-value="${ap.get('vendor', '').strip()}">
+                            <i class="vendor ${ap['vendor'].lower()}"></i>
+                            <input type="hidden" value="${ap['vendor'].lower()}" />
+                        </td>
+                        <td data-value="${ap.get('position', '')}">${ap.get('position', '')}</td>
+                        <td data-value="">${ap.get('conns', 0)}</td>
+                        % if ins.is_allowed('update', 'ap'):
+                        <td>
+                            <span class="edit">编辑</span>
+                            <button type="button" class="btnGrayAutoMin save">保存</button>
+                            <button type="button" class="btnGrayAutoMin cancel">取消</button>
+                            % if not ap['resource']:
+                            <span class="error">(*待绑定)</span>
+                            % endif
+                        </td>
+                        % endif
+                    </tr>
+                    % endfor
+                </table>
+                <div class="page">
+                    <input type="button" value="跳转" class="btnWhiteSmall jump" />
+                    <input type="text" class="pagesize" placeholder="1" />
+                    <input type="button" value="下一页" class="btnWhiteSmall next" />
+                    <div>
+                        <span class="nowpage">1</span> /
+                        <span class="pagecount">
+                        % if page_count==0:
+                        1
+                        % else:
+                        ${page_count}
+                        % endif
+                        </span>
+                    </div>
+                    <input type="button" value="上一页" class="btnWhiteSmall prev" />
+                </div>
+          </div>
+        </div>
+    </div>
+</div>

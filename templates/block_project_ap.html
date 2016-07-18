@@ -1,0 +1,51 @@
+<tr>
+  <th>MAC地址</th>
+  <th>AP名称</th>
+  <th>设备型号</th>
+  <th>品牌</th>
+  <th>位置</th>
+  <th>所属</th>
+  <th>SSID</th>
+  % if ins.is_allowed('update', 'ap'):
+  <th>操作</th>
+  % endif
+</tr>
+% for ap in aps:
+<tr>
+  <td>${ap.get('mac', '')}</td>
+  <td>${ap.get('name', '')}</td>
+  <td>${ap.get('model', '')}</td>
+  <td>
+    % if ap.get('vendor', '').strip() == 'hanming' or ap.get('vendor', '').strip() == 'Hanming':
+    <i class="vendor hanming"></i>
+    % elif ap.get('vendor', '').strip() == 'ruijie' or ap.get('vendor', '').strip() == 'Ruijie':
+    <i class="vendor ruijie"></i>
+    % elif ap.get('vendor', '').strip() == 'h3c' or ap.get('vendor', '').strip() == 'H3C':
+    <i class="vendor h3c"></i>
+    % elif ap.get('vendor', '').strip() == 'huawei' or ap.get('vendor', '').strip() == 'Huawei':
+    <i class="vendor huawei"></i>
+    % else:
+    ${ap.get('vendor', '').strip()}
+    % endif
+    <input type="hidden" value="${ap['vendor']}" />
+  </td>
+  <td>${ap.get('location', '')}</td>
+  <td>
+    % if ap['resource']:
+    ${ap['resource']['name']}
+    % endif
+  </td>
+  <td>${ap['ssid']}</td>
+  % if ins.is_allowed('update', 'ap'):
+  <td>
+    <span class="edit">编辑</span>
+    <button type="button" class="btnGrayAutoMin save">保存</button>
+    <button type="button" class="btnGrayAutoMin cancel">取消</button>
+    % if resource is None:
+    <span class="error">(*待绑定)</span>
+    % endif
+    <input type="hidden" value="${str(ap['_id'])}" />
+  </td>
+  % endif
+</tr>
+% endfor

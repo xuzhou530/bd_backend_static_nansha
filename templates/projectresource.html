@@ -1,0 +1,55 @@
+## projectresource.html
+<%inherit file="base.html" />
+
+<div class="wrapper">
+    <input type="hidden" value="${location}" id="location" />
+    <!--导航-->
+    <%include file="nav.html" />
+    <!--右侧功能栏-->
+    <div class="projects">
+        <div class="tabbox">
+            <div class="bread">
+                <%include file="bread_nav.html" />
+                <div class="widget">
+                    <a href="/projectresourceedit.html?location=${location}" class="btnBlueSmall">新增资源</a>
+                </div>
+            </div>
+        </div>
+        <div class="tabbox ns_prolist">
+            <div class="areabox">
+                % for b in briefs:
+                <a class="protab" href="/projectcard.html?location=${b[3]}">
+                    <div class="tabimg">
+                        % if b[0]['logo'] == '':
+                        <img src="/static/images/cover/defaultImg.jpg" />
+                        % else:
+                        <img src="${b[0]['logo']}" />
+                        % endif
+                    </div>
+                    <div class="tabinfo">
+                        % if b[0]['name'] is not None:
+                        <h6>${b[0]['name']}</h6>
+                        % else:
+                        <h6></h6>
+                        % endif
+                        <ul>
+                            <li><span><label>运行：</label><em>${b[1].get('onlines', '')}</em></span><span><label>在线：</label><em>${b[1].get('conns', '')}</em></span></li>
+                            <li><span><label>故障：</label><em class="ns_red">${b[1].get('offlines', '')}</em></span><span><label>管理员：</label><em title="${b[0]['owner']}">${b[0]['owner']}</em></span></li>
+                            <li><span><label>网络：</label><em class="ns_red">${b[2]}</em></span></li>
+                        </ul>
+                        <p>开通日期：${b[0]['ctime'].strftime('%Y-%m-%d')}</p>
+                    </div>
+                </a>
+                % endfor
+            </div>
+        </div>
+    </div>
+</div>
+
+<%block name="aside">
+    <%include file="modal.html" />
+</%block>
+
+<%block name="jscode">
+    <script type="text/javascript" src="/static/js/lib/ajaxfileupload.js"></script>
+</%block>

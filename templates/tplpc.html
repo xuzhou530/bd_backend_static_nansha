@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>${config['title']}</title>
+    <style type="text/css">
+        *{margin:0;padding:0}
+        body{background:url("${config['pic']}") top center no-repeat;font-family:"microsoft yahei","Helvetica Neue Light","HelveticaNeue-Light","Helvetica Neue",Calibri,Helvetica,Arial;font-size:16px;
+            min-width: 1000px;
+        }
+        button,input{font-family:"microsoft yahei","Helvetica Neue Light","HelveticaNeue-Light","Helvetica Neue",Calibri,Helvetica,Arial;font-size:16px;outline:none}
+        button{background:none;border:none;cursor:pointer;font-weight:bold}
+        a{text-decoration:none}
+        .pBar{
+            position: fixed;
+            /*top: 0;*/
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: #1ba0d8;
+            background: -webkit-linear-gradient(left, #00c8b3, #2196f3);
+            background: -o-linear-gradient(right, #00c8b3, #2196f3);
+            background: -moz-linear-gradient(right, #00c8b3, #2196f3);
+            background: linear-gradient(to right, #00c8b3, #2196f3);
+            box-shadow:  0 2px 3px rgba(0, 0, 0, 0.1);
+        }
+        .pWrapper{width:1000px;margin:0 auto}
+        .pTitle{color:#fff;float:left}
+        .pTitle h1{font-size:20px;line-height:32px}
+        .pTitle a{font-size:14px;color:#fff}
+        .pAuthor{float:right;font-weight:bold;color:#fff;position:relative}
+        .pAuthor:after{
+            content:" ";
+            background: url("/static/images/nsimgs/portal.png") -130px 0 no-repeat;
+            width: 2px;
+            height: 60px;
+            display: inline-block;
+            float: right;
+        }
+        .pAuto,.pApp,.pLogin,.pQrcode{float:left;line-height:60px}
+        .pAuto:before,.pApp:before,.pLogin:before,.pQrcode:before{
+            content:" ";
+            background: url("/static/images/nsimgs/portal.png") -130px 0 no-repeat;
+            width: 2px;
+            height: 60px;
+            display: inline-block;
+            float: left;
+        }
+        .pAuto button{color:#ff7c0d}
+        .pAuto button:hover{color:#fff}
+        .pApp a{color: #009cff;display:inline-block;text-align:center;line-height:40px}
+        .pApp a:hover{color:#fff}
+        .pLogin h2,.pQrcode h2{
+            color: #fff;
+            padding: 19px 0;
+            text-align: center;
+            width: 180px;
+            line-height: normal;
+            cursor: pointer;
+            float: left;
+            font-size: 16px;
+        }
+        .pLogin h2.on,.pQrcode h2.on{
+            margin-top: 8px;
+            background: #fff;
+            background: rgba(255,255,255,0.9);
+            color: #009cff;
+            width: 180px;
+            padding: 11px 0 19px;
+        }
+        .pEwm,.pForm{display:none}
+        .pEwm{
+            position: absolute;
+            top: 60px;
+            right: 2px;
+            width: 180px;
+            height: 172px;
+            background: #fff;
+            background: rgba(255,255,255,0.9);
+            cursor: default;
+        }
+        .pForm{
+            position: absolute;
+            top: 60px;
+            right: 184px;
+            height: 216px;
+            background: #fff;
+            background: rgba(255,255,255,0.9);
+        }
+        .pForm h2{
+            position: relative;
+            left: 100px;
+            top: 0;
+            cursor: pointer;
+        }
+        .main__content{padding-top:20px;background:none}
+        .main__content-qrcode{border:2px solid #009cff;height:128px}
+        #portal_zone{padding:20px 20px 0 20px}
+        #portal_zone div{
+            position:relative;
+            width:240px;
+            margin-bottom:16px;
+            border: 1px solid #acacac;
+            border-radius: 4px;
+        }
+        #portal_zone div input{
+            border: none;
+            height: 40px;
+            background:none;
+            width: 100%;
+            display: block;
+            font-size: 14px;
+            color: #009cff;
+            text-indent: 10px;
+        }
+        #portal_zone #portal_user{width:138px}
+        #portal_zone div span{
+            position: absolute;
+            right: 0;
+            top: 1px;
+            display: block;
+        }
+        #portal_yzm{
+            height: 40px;
+            padding: 0;
+            width: 100px;
+            font-size: 14px;
+            font-weight: normal;
+            color: #009cff;
+            float: right;
+        }
+        #portal_zone div span:before{
+            content: " ";
+            background: url("/static/images/nsimgs/portal.png") -131px -78px no-repeat;
+            height: 40px;
+            width: 1px;
+            display: inline-block;
+            float: left;
+        }
+        #portal_login{
+            width: 240px;
+            height: 40px;
+            color: #fff;
+            background: #1ba0d8;
+            border-radius: 4px;
+            background: -webkit-linear-gradient(left, #00c8b3 , #2196f3);
+            background: -o-linear-gradient(right, #00c8b3, #2196f3);
+            background: -moz-linear-gradient(right, #00c8b3, #2196f3);
+            background: linear-gradient(to right, #00c8b3 , #2196f3);
+            box-shadow:  0 2px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .pbtm{bottom:0}
+        .pbtm .pLogin h2.on,.pbtm .pQrcode h2.on{margin-top:0;padding:19px 0 11px}
+        .pbtm .pForm{top:-216px}
+        .pbtm .pEwm{top:-172px}
+
+        .logo{background-position:0 -88px;width:22px;height:22px;margin-right:5px}
+        .aDwn{background:no-repeat;background-position:0 0;width:20px;height:20px;margin-left:5px}
+        .aUp{background: no-repeat;background-position:0 -22px;width:20px;height:20px;margin-left:5px}
+        h2.on .aDwn{background-position:0 -44px}
+        h2.on .aUp{background-position:0 -66px}
+        #autoAuthor{background-position:0 -112px;width:132px;height:40px;margin:0 20px}
+        #autoAuthor:hover{background-position:0 -154px}
+        #appDL{background-position:0 -196px;width:132px;height:40px;margin:0 20px}
+        #appDL:hover{background-position:0 -238px}
+        .logo,.aDwn,.aUp{display:inline-block;vertical-align:middle;margin-top:-2px}
+        /* ../images/portal.png?20160707153309 */
+        .logo,.aDwn,.aUp,h2.on .aDwn,h2.on .aUp,#autoAuthor,#autoAuthor:hover,#appDL,#appDL:hover{background-image:url("/static/images/nsimgs/portal.png?20160707153309");}
+    </style>
+</head>
+
+<body>
+    % if config['nav'] == 'top':
+    <div class="pBar">
+    % else:
+    <div class="pBar pbtm">
+    % endif
+        <div class="pWrapper">
+            <div class="pTitle">
+                <h1>${config['title']}</h1>
+                <a href="http://mbd.cniotroot.cn/"><i class="logo"></i>壁咚分布式认证系统</a>
+            </div>
+            <div class="pAuthor">
+                % if 'auto' in config['way']:
+                <div class="pAuto">
+                    <button type="button" id="autoAuthor">一键认证</button>
+                </div>
+                % endif
+                % if 'app' in config['way']:
+                <div class="pApp">
+                    <a href="javascript:;" id="appDL" target="_blank">APP认证上网</a>
+                </div>
+                % endif
+                % if 'account' in config['way']:
+                <div class="pLogin">
+                    <h2 class="" id="pLogin">短信/账户上网<i class="aDwn"></i></h2>
+                    <div class="pForm" id="pForm">
+                        <div id="portal_zone">
+                            <div>
+                                <input type="text" placeholder="账号/手机号" />
+                            </div>
+                            <div>
+                                <input type="text" placeholder="密码/验证码" />
+                            </div>
+                            <button type="button" id="portal_login">登录</button>
+                        </div>
+                    </div>
+                </div>
+                % endif
+                % if 'wxscan' in config['way']:
+                <div class="pQrcode">
+                    <h2 class="" id="pQrcode">微信扫一扫上网<i class="aDwn"></i></h2>
+                    <div class="pEwm" id="pEwm">
+                        <div class="main__content">
+                            <div class="main__content-qrcode" id="qrcode_zone" style="text-align:center;margin:0 auto;width:128px;position:relative">
+                                <img src="/static/images/nsimgs/qrcode_258.jpg" width="128" height="128" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                % endif
+            </div>
+        </div>
+    </div>
+    % if 'wxscan' in config['way']:
+    <script type="text/javascript">
+        document.getElementById('pQrcode').onclick=function(){
+            if(this.className=='on'){
+                this.className='';
+                document.getElementById('pEwm').style.display='none';
+            }else{
+                this.className='on';
+                document.getElementById('pEwm').style.display='block';
+            }
+        };
+    </script>
+    % endif
+    % if 'account' in config['way']:
+    <script type="text/javascript" src="/js/portal.js"></script>
+    <script>
+        document.getElementById('pLogin').onclick=function(){
+            if(this.className=='on'){
+                this.className='';
+                document.getElementById('pForm').style.display='none';
+            }else{
+                this.className='on';
+                document.getElementById('pForm').style.display='block';
+            }
+        };
+        for(var i=0,ipu=document.getElementById('portal_zone').getElementsByTagName('input');i<ipu.length;i++){
+            ipu[i].onfocus=function(){this.parentNode.style.borderColor='#009cff';}
+            ipu[i].onblur=function(){this.parentNode.style.borderColor='#acacac';}
+        }
+    </script>
+    % endif
+</body>
+</html>

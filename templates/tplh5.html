@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>${config['title']}</title>
+    <style type="text/css">
+        *{margin:0;padding:0}
+        body{font-family:"microsoft yahei", Arial, Helvetica, sans-serif;font-size: 16px}
+        .wrapper{position: relative;margin: 0 auto;}
+        .bg{width: 100%;display:block}
+        h1{padding:0 21px;box-sizing:border-box;font-size:32px;font-weight:normal;color:#fff;text-align:center;text-shadow:0 2px 4px rgba(0,0,0,0.8);position:absolute;top:20%;left:0;width:100%}
+        .ns_box{width:100%;opacity:0.8;position:absolute;bottom:10%;left:0;box-sizing:border-box;background:linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0) 100%);height:280px}
+        #zw{padding:0 21px;box-sizing:border-box;position:absolute;top:50%;left:0;width:100%}
+        .wx, .dld{width:100%;color:#fff;font-size:16px;padding:11px 0;border-radius:7px;border:none;margin-bottom:15px;}
+        .dld{display:block;text-align:center;background:#51adf1;border-bottom:2px solid #489bd8;text-decoration:none}
+        .wx{padding:8px 0;background:#2fe033;border-bottom:2px solid #40c243;font-family:"microsoft yahei", Arial, Helvetica, sans-serif}
+        .wx i{
+            background: url("/static/images/nsimgs/weixin_ico.png") no-repeat;
+            background-size: 33px;
+            width: 33px;
+            height: 27px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 7px;
+        }
+        #portal_zone{font-size:16px;width:100%}
+        #portal_zone input, #portal_zone button{
+            font-family: "microsoft yahei", "proxima-nova", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+            font-size: 13px;
+            outline: none;
+            -webkit-appearance: none;
+            border-radius: 7px;
+        }
+        #portal_zone div{
+            position: relative;
+            border: 1px solid #d9d9d9;
+            background: #efefef;
+            margin-bottom: 10px;
+            border-radius: 7px;
+        }
+        #portal_zone div input{
+            width: 100%;
+            padding: 14px 0;
+            text-indent: 18px;
+            box-sizing: border-box;
+            border: none;
+            background: none;
+        }
+        #portal_zone #portal_login{
+            background: #fea520;
+            border: none;
+            border-bottom: 2px solid #d38b1f;
+            color: #fff;
+            width: 100%;
+            padding: 11px 0;
+            font-size: 16px;
+        }
+        #portal_yzm{
+            color: #489ad8;
+            position: absolute;
+            right: 0;
+            top: 0;
+            padding: 14px 0;
+            width: 100px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+      <img src="${config['pic']}" class="bg" />
+        <h1>${config['title']}</h1>
+        <div class="ns_box">
+            <div id="zw">
+                % if 'wechat' in config['way']:
+                <button type="button" class="wx"><i></i>微信上网</button>
+                % endif
+                % if 'app' in config['way']:
+                <a href="javascript:;" class="dld">APP下载</a>
+                % endif
+                % if 'account' in config['way']:
+                <div id="login">
+                    <div id="portal_zone">
+                        <div>
+                            <input type="text" placeholder="账号/手机号:" />
+                        </div>
+                        <div>
+                            <input type="text" placeholder="密码/验证码:" />
+                        </div>
+                        <button type="button" id="portal_login">登录</button>
+                    </div>
+                </div>
+                % endif
+            </div>
+        </div>
+    </div>
+    <script>
+        function resizeZW(){
+            var zw = document.getElementById('zw');
+            var h = zw.offsetHeight;
+            zw.style.marginTop = -Math.ceil(h/2)+"px";
+        }
+        resizeZW();
+    </script>
+</body>
+</html>

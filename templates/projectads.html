@@ -1,0 +1,48 @@
+## projectads.html
+<%inherit file="base.html" />
+
+<div class="wrapper">
+    <!--导航-->
+    <%include file="nav.html" />
+    <!--右侧功能栏-->
+    <div class="projects">
+        <div class="tabbox">
+            <div class="bread">
+                <%include file="bread_nav.html" args="location=location,ins=ins,suffix='广告模块'"/>
+            </div>
+        </div>
+        <div class="tabbox ns_table">
+            <ul class="ns_ads">
+                <li><span>余额：<em>20548</em>元</span><span>昨日消费：<em>20548</em>元</span><button type="button" class="btnBlueSmall">充值</button></li>
+                <li><span>已投：<em>13</em>个</span><span>未投：<em>10</em>个</span><span>暂停：<em>10</em>个</span><a href="/projectadsedit.html?location=${location}" class="btnBlueSmall">新增</a></li>
+            </ul>
+            <div class="toolnav">
+                <div class="toolbox">
+                    <div class="search"><input type="text" placeholder="搜索" /><button type="button"><i class="searchIcoGray"></i></button></div>
+                </div>
+            </div>
+            <div class="areabox">
+                <table>
+                    <tr>
+                        <th>广告名称</th>
+                        <th>相关项目</th>
+                        <th>消费(元)</th>
+                        <th>广告类型</th>
+                        <th>广告量</th>
+                        <th>结束时间</th>
+                        <th>操作</th>
+                    </tr>
+                    <tr>
+                        <td>活动页</td>
+                        <td>无线城市</td>
+                        <td>120</td>
+                        <td>无</td>
+                        <td>203</td>
+                        <td>2016-05-07 12:00</td>
+                        <td><span class="edit">编辑</span><span class="forbin">禁用</span><span class="unforbin">启用</span><span class="delete">删除</span></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

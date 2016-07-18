@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>
+        % if ins.get_session('_location').endswith('59484'):
+        广州女子职业技术学院办公楼后台管理系统
+        % elif ins.get_session('_location').endswith('77201'):
+        南沙无线城市管理后台
+        % elif ins.get_session('_location').endswith('59922'):
+        NIOT分布式认证系统-众拓科技节点管理后台
+        % elif ins.get_session('_location').endswith('10003'):
+        区府管理后台
+        % else:
+        分布式认证系统
+        % endif
+    </title>
+    <link rel="stylesheet" href="/static/css/jqueryui.css" />
+    <link rel="stylesheet" href="/static/css/main.css" />
+    <script type="text/javascript" src="/static/js/lib/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/js/main.min.js"></script>
+    <%block name="jscode"></%block>
+</head>
+
+<body>
+    <div class="header">
+        <div class="wrapper">
+            % if ins.get_session('_location').endswith('59484'):
+            <a href="/index.html" title="广州女子学院办公网络管理后台" class="logo school">广州女子学院办公网络管理后台</a>
+            % elif ins.get_session('_location').endswith('77201'):
+            <a href="/index.html" title="南沙无线城市管理后台" class="logo nansha">南沙无线城市管理后台</a>
+            % elif ins.get_session('_location').endswith('59922'):
+            <a href="/index.html" title="NIOT分布式认证系统-众拓科技节点管理后台" class="logo zttec">NIOT分布式认证系统-众拓科技节点管理后台</a>
+            % elif ins.get_session('_location').endswith('10003'):
+            <a href="/index.html" title="区府管理后台" class="logo">区府管理后台</a>
+            % else:
+            <a href="/index.html" title="${ins.get_session('project_name')}分布式认证系统" class="logo">${ins.get_session('project_name')}分布式认证系统</a>
+            % endif
+            <div class="admin">
+                <img src="../static/images/logo_bidong.png" />
+                <span class="username">${ins.get_session('user')}</span>
+                <span class="cutofline"><i></i></span>
+                <a href="/logout" class="logout">退出</a>
+            </div>
+            <div class="search">
+                <input type="text" />
+                <button><i class="searchIco"></i></button>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        ${self.body()}
+    </div>
+    <div class="footer">
+        <div class="wrapper">
+            <p>广州中国科学院计算机网络信息中心</p>
+            <p>电话：020-22992549<span></span>邮箱：gd-xub@chinaunicom.cn</p>
+        </div>
+    </div>
+    <%block name="aside"></%block>
+    <div class="uptotop"><i></i>返回顶部</div>
+</body>
+</html>

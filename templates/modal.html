@@ -1,0 +1,51 @@
+<div class="modal fade" id="modalProject">
+    <div class="modal_project modal_body">
+        <h3>填写新增资源信息</h3>
+        <ul class="vertical">
+            <li>
+                <label><i>*</i>属性：</label>
+                <span class="veright">
+                    <select id="resId">
+                        % for rt in resource_types:
+                        <option value="${rt['id']}">${rt['name']}</option>
+                        % endfor
+                    </select>
+                </span>
+            </li>
+            <li>
+            <label><i>*</i>资源名称：</label>
+                <span class="veright"><div class="verify"><input type="text" name="resName" class="matchVerify shouldVerify" /></div></span>
+            </li>
+            <li>
+                <label><i>*</i>责任人：</label>
+                <span class="veright"><div class="verify"><input type="text" name="resOwner" class="matchVerify shouldVerify" /></div></span>
+            </li>
+            <li>
+                <label><i>*</i>联系电话：</label>
+                <span class="veright"><div class="verify"><input type="text" name="resMobile" class="matchVerify shouldVerify checkPhone" /></div></span>
+            </li>
+            <li>
+                <label><i>*</i>楼房/店铺地址：</label>
+                <span class="veright"><div class="verify"><input type="text" name="resAddress" class="matchVerify shouldVerify" /></div></span>
+            </li>
+            <li>
+            <label>照片/Logo：</label>
+                <span class="veright">
+                    <div class="file">
+                        <input type="hidden" name="resLogo" />
+                        <input type="file" class="uploadImg proImg" id="resLogo" imgElementId="imgResLogo" name="uploadImg" />
+                        <button type="button" class="btnGreen">选择图片</button>
+                        <div class="loading"></div>
+                    </div>
+                    <div class="showImg">
+                        <img src="" id="imgResLogo" />
+                        <i class="deluploadImg"></i>
+                    </div>
+                </span>
+            </li>
+        </ul>
+        <div class="btngroups"><button type="button" class="btnBlue add">确定</button></div>
+        <i class="msg"></i>
+        <span class="closed">X</span>
+    </div>
+</div>

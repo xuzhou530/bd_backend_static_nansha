@@ -1,0 +1,230 @@
+## projectuser.html
+<%inherit file="base.html" />
+
+<div class="wrapper">
+    <input type="hidden" name="" id="pms-create-policy" value="${ins.is_allowed('create', 'policy')}">
+    <input type="hidden" name="" id="pms-update-policy" value="${ins.is_allowed('update', 'policy')}">
+    <input type="hidden" name="" id="pms-delete-policy" value="${ins.is_allowed('delete', 'policy')}">
+    <input type="hidden" value="${location}" id="location" />
+    <!--导航-->
+    <%include file="nav.html" />
+    <!--右侧功能栏-->
+    <div class="projects">
+        <div class="tabbox">
+            <div class="bread">
+                <%include file="bread_nav.html" args="location=location,ins=ins,suffix='用户列表'"/>
+                <div class="widget">
+                    <span class="widinfo bg_green">总人数：${count}</span>
+                    <span class="widinfo bg_red">总流量：${total_traffic}M</span>
+                </div>
+            </div>
+        </div>
+        <div class="tabbox ns_table" id="userlist">
+            <ul class="adsnav">
+                <li data-mask="8" class="on">在线用户</li>
+                <li data-mask="1">专网用户</li>
+                <li data-mask="2">上网账号</li>
+                <li>缴费账户</li>
+                <li>下级代理</li>
+            </ul>
+            <div class="toolnav">
+                <div class="toolbox">
+                    <div class="search"><input type="text" placeholder="输入搜索内容" data-search="" /><button type="button"><i class="searchIcoGray"></i></button></div>
+                    % if ins.is_allowed('create', 'user'):
+                    <button type="button" class="btnGraySmall add" style="display: none;">新增</button>
+                    <a href="/user_template.xls?location=${location}" class="btnGraySmall" id="downloadTmp" style="display: none;">下载模板</a>
+                    <button type="button" class="btnGraySmall" id="uploadfile" style="display: none;">导入用户</button>
+                    % endif
+                    <input type="file" class="xlsfile" id="xlsfile" name="uploadfile" />
+                    <a href="javascript:;" class="btnGraySmall" id="export">导出报表</a>
+                    <button type="button" class="btnGraySmall" id="reflow" style="width: 112px;">重新统计流量</button>
+                </div>
+            </div>
+            <div class="areabox">
+                <table data-sort="">
+                    <tr>
+                        % for h in online_headers:
+                          % if h['is_profile']:
+                          <th column="${h['column']}" sort="-1"><span><em>${h['title']}</em><i></i></span></th>
+                          % endif
+                        % endfor
+                        <th column="traffic" sort="-1" class="sortOn"><span><em>流量</em><i></i></span></th>
+			<th width="30%;" >客户端</th>
+                        % if ins.is_allowed('update', 'user'):
+                        <th>操作</th>
+                        % endif
+                    </tr>
+                    % for online in onlines:
+                    % if online.mask & (1 << 30) <= 0:
+                    <tr>
+                    % else:
+                    <tr class="dab">
+                    % endif
+                        % for h in online_headers:
+                          % if h['is_profile']:
+                            % if h['type']=='password':
+                            <td type="${h['type']}" data-value="${getattr(online, h['column'], '')}" data-tip="${getattr(online, h['column'], '')}" class="pwdtip">***</td>
+                            % else:
+                            <td type="${h['type']}" data-value="${getattr(online, h['column'], '')}">${getattr(online, h['column'], '')}</td>
+                            % endif
+                          % endif
+                        % endfor
+                        <td>${_t(online.traffic)}M</td>
+			<% import re %>
+			<% 
+			def process_platform(user): 
+			    plf = platforms.get(user, '')
+			    p = re.findall(r'\(([^\)]+)', plf) 
+			    if p:
+			    	p = ''.join(p[0])
+			    	p = re.split(r'[,|;]', p)
+		            	excludes = ('linux', 'android', 'iphone', 'u', 'zh-cn', 'like', 'gecko')
+			    	p = [item.strip() for item in p if item.lower() not in excludes]
+			    	ret = ''.join(p)
+			    else:
+				ret = plf
+			    return ret
+			%>
+                        <td style="overflow:hidden;">${process_platform(online.user)}</td>
+                        % if ins.is_allowed('update', 'user'):
+                        <td>
+                            % if online.mask & (1 << 30) <= 0:
+                            <span class="forbin">停用</span>
+                            % else:
+                            <span class="unforbin">启用</span>
+                            % endif
+                            <input type="hidden" value="${online.user}"/>
+                        </td>
+                        % endif
+                    </tr>
+                    % endfor
+                </table>
+                <div class="page">
+                  <input type="button" value="跳转" class="btnWhiteSmall jump" />
+                  <input type="text" class="pagesize" placeholder="1" />
+                  <input type="button" value="下一页" class="btnWhiteSmall next" />
+                  <div>
+                    <span class="nowpage">1</span> /
+                    <span class="pagecount">
+                      % if page_count==0:
+                      1
+                      % else:
+                      ${page_count}
+                      % endif
+                    </span>
+                  </div>
+                  <input type="button" value="上一页" class="btnWhiteSmall prev" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%block name="aside">
+    <%include file="imgModal.html" />
+    <div class="modal fade" id="modalRoom">
+        <div class="modal_room modal_body">
+            <h3>新增用户</h3>
+            <ul class="vertical" style="display: none;"></ul>
+            <ul class="vertical" style="display: none;">
+                % for h in pn_headers:
+                % if h['is_profile']:
+                <li><label>${h['title']}：</label><span class="veright">
+                    % if h['type'] == 'datetime':
+                    <div class="verify"><input type="text" name="${h['column']}" data-type="${h['type']}" class="datepicker"/></div>
+                    % elif h['type'] == 'password':
+                    <div class="verify"><input type="password" name="${h['column']}" data-type="${h['type']}"/></div>
+                    % else:
+                    <div class="verify"><input type="text" name="${h['column']}" data-type="${h['type']}"/></div>
+                    % endif
+                </span></li>
+                % endif
+                % endfor
+            </ul>
+            <ul class="vertical" style="display: none;">
+                % for h in bd_headers:
+                % if h['is_profile']:
+                <li><label>${h['title']}：</label><span class="veright">
+                    % if h['column'] == 'ends':
+                    <div class="amount">
+                        <button type="button" class="btnWhiteSmall reduceOne">-</button>
+                        <input type="text" name="ends" value="2" data-type="int" />
+                        <button type="button" class="btnWhiteSmall addOne">+</button>
+                    </div>
+                    % elif h['column'] == 'mobile':
+                    <div class="verify"><input type="text" name="${h['column']}" class="matchVerify checkPhone" data-type="${h['type']}" /></div>
+                    % elif h['column'] == 'user':
+                    <em style="float: left; line-height: 32px;">${location.split(',')[-1]}</em><div class="verify normalVerify" style="width: 158px; float: left;"><input type="text" name="${h['column']}" class="matchVerify shouldVerify" data-type="${h['type']}" style="width: 158px; margin-right: 0;" /></div>
+                    % elif h['type'] == 'datetime':
+                    <div class="verify"><input type="text" name="${h['column']}" data-type="${h['type']}" class="datepicker"/></div>
+                    % elif h['type'] == 'password':
+                    <div class="verify"><input type="text" name="${h['column']}" data-type="${h['type']}"/></div>
+                    % else:
+                    <div class="verify"><input type="text" name="${h['column']}" data-type="${h['type']}"/></div>
+                    % endif
+                </span></li>
+                % endif
+                % endfor
+            </ul>
+            <ul class="vertical" style="display: none;">
+                % for h in bd_headers:
+                % if h['is_profile']:
+                <li><label>${h['title']}：</label><span class="veright">
+                    % if h['column'] == 'ends':
+                    <div class="amount">
+                        <button type="button" class="btnWhiteSmall reduceOne">-</button>
+                        <input type="text" name="ends" value="2" data-type="int" />
+                        <button type="button" class="btnWhiteSmall addOne">+</button>
+                    </div>
+                    % elif h['column'] == 'mobile':
+                    <div class="verify"><input type="text" name="${h['column']}" class="matchVerify checkPhone" data-type="${h['type']}" /></div>
+                    % elif h['column'] == 'user':
+                    <em style="float: left; line-height: 32px;">${location.split(',')[-1]}</em><div class="verify normalVerify" style="width: 158px; float: left;"><input type="text" name="${h['column']}" class="matchVerify shouldVerify" data-type="${h['type']}" style="width: 158px; margin-right: 0;" /></div>
+                    % elif h['type'] == 'datetime':
+                    <div class="verify"><input type="text" name="${h['column']}" data-type="${h['type']}" class="datepicker"/></div>
+                    % elif h['type'] == 'password':
+                    <div class="verify"><input type="text" name="${h['column']}" data-type="${h['type']}"/></div>
+                    % else:
+                    <div class="verify"><input type="text" name="${h['column']}" data-type="${h['type']}"/></div>
+                    % endif
+                </span></li>
+                % endif
+                % endfor
+            </ul>
+            <div class="btngroups"><button type="button" class="btnBlue add">确定</button></div>
+            <i class="msg"></i>
+            <span class="closed">X</span>
+            <input type="hidden" name="idx" />
+            <input type="hidden" name="id" />
+        </div>
+    </div>
+</%block>
+
+<%block name="jscode">
+    <script type="text/javascript" src="/static/js/lib/ajaxfileupload.js"></script>
+    <script type="text/javascript" src="/static/js/lib/jqueryui.min.js"></script>
+    <script type="text/javascript" src="/static/js/lib/jquery-ui-timepicker-addon.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            // 日期
+            $(".datepicker").datetimepicker({
+                dateFormat: 'yy-mm-dd',
+                stepMinute: 10
+            });
+            $("#dateStart").datepicker({
+                dateFormat: 'yy-mm-dd',
+                stepMinute: 10,
+                onClose: function(selectedDate) {
+                    $("#dateEnd").datepicker("option", "minDate", selectedDate);
+                }
+            });
+            $("#dateEnd").datepicker({
+                dateFormat: 'yy-mm-dd',
+                stepMinute: 10,
+                onClose: function(selectedDate) {
+                    $("#dateStart").datepicker("option", "maxDate", selectedDate);
+                }
+            });
+        });
+    </script>
+</%block>

@@ -1,0 +1,102 @@
+## projectadsedit.html
+<%inherit file="base.html" />
+
+<div class="wrapper">
+    <!--导航-->
+    <%include file="nav.html" />
+    <!--右侧功能栏-->
+    <div class="projects">
+        <div class="tabbox">
+            <div class="bread">
+                <%include file="bread_nav.html" />
+            </div>
+        </div>
+        <div class="tabbox ns_adver">
+            <div class="toolnav">
+                <h3>新增</h3>
+            </div>
+            <div class="areabox">
+                <ul class="vertical">
+                    <li>
+                        <label>广告名：</label>
+                        <span class="veright"><div class="verify"><input type="text" name="name" class="matchVerify shouldVerify" /></div></span>
+                    </li>
+                    <li>
+                        <label style="float: none;">编辑框：</label>
+                        <span>
+                            <script id="ADSeditor" type="text/plain" style="width:98%; height:300px;"></script>
+                        </span>
+                    </li>
+                </ul>
+                <ul class="adsnav">
+                    <li class="on">相关项目</li>
+                    <li>区域选择</li>
+                    <li>展示位置</li>
+                </ul>
+                <div class="adskpi">
+                    <i></i>
+                    <div class="mw880">
+                        <span class="on">南沙无线城市</span><span class="on">白云无线城市</span><span>羊城创意产业园</span><span>十二道大酒店</span>
+                    </div>
+                </div>
+                <ul class="vertical">
+                    <li>
+                        <label>关键字：</label>
+                        <span class="veright"><div class="verify"><input type="text" name="name" class="matchVerify shouldVerify" /></div></span>
+                    </li>
+                    <li>
+                        <label>预算：</label>
+                        <span class="veright"><div class="verify"><input type="text" name="name" class="matchVerify shouldVerify" /></div></span>
+                    </li>
+                    <li>
+                        <label>投放时间：</label>
+                        <span class="veright">
+                            <div class="verify" style="width: 210px; float:left;">
+                                <input type="text" name="name" class="matchVerify shouldVerify" id="dateStart" style="width: 208px;" />
+                            </div>
+                            <i style="float: left; margin: 0 10px; line-height: 30px;">--</i>
+                            <div class="verify" style="width: 210px; float:left;">
+                                <input type="text" name="name" class="matchVerify shouldVerify" id="dateEnd" style="width: 208px;" />
+                            </div>
+                        </span>
+                    </li><li>
+                        <label>投放资源：</label>
+                        <span class="veright"><div class="verify"><input type="text" name="name" class="matchVerify shouldVerify" /></div></span>
+                    </li>
+                </ul>
+                <p class="btnSub"><button type="button" class="btnGraySmall">预览</button><button type="button" class="btnGraySmall">发布</button></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%block name="jscode">
+    <script type="text/javascript" src="/static/js/lib/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" src="/static/js/lib/ueditor/ueditor.all.js"></script>
+    <script type="text/javascript" src="/static/js/lib/jqueryui.min.js"></script>
+    <script type="text/javascript" src="/static/js/lib/jquery-ui-timepicker-addon.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            // 日期
+            $("#dateStart").datetimepicker({
+                dateFormat: 'yy-mm-dd',
+                stepMinute: 10,
+                onClose: function(selectedDate) {
+                    $("#dateEnd").datepicker("option", "minDate", selectedDate);
+                }
+            });
+            $("#dateEnd").datetimepicker({
+                dateFormat: 'yy-mm-dd',
+                stepMinute: 10,
+                onClose: function(selectedDate) {
+                    $("#dateStart").datepicker("option", "maxDate", selectedDate);
+                }
+            });
+
+            //编辑器初始化
+            var ue = UE.getEditor('ADSeditor', {
+                autoClearinitialContent:false
+            });
+        });
+    </script>
+</%block>

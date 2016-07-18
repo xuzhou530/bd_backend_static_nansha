@@ -1,0 +1,37 @@
+## adminadd.html
+<%inherit file="base.html" />
+
+<div class="wrapper">
+    <!--导航-->
+    <%include file="nav.html" />
+    <!--右侧功能栏-->
+    <div class="projects">
+        <div class="tabbox">
+            <div class="bread">
+                <h2>账户管理</h2>
+                <div class="widget">
+                    <button class="btnBlueSmall" id="roleAdd">确定</button>
+                    <a href="/admin.html" class="btnGraySmall">取消</a>
+                </div>
+            </div>
+        </div>
+        <div class="tabbox ns_role">
+            <div class="toolnav">
+                <h3>角色名称：<input type="text" class="role_ipu" placeholder="请输入角色名称" name="roleName" /></h3>
+            </div>
+            <div class="toolnav">
+                <h3>功能选择：</h3>
+            </div>
+            <div class="areabox" id="roleOpra">
+                % for p in permission:
+                <p><label data-resource="${p['resource']}"><i class="headunchk"></i>${p['label']}</label></p>
+                <div>
+                    % for op in p['operation']:
+                    <label data-operation="${op['name']}"><i class="unchk"></i>${op['label']}</label>
+                    % endfor
+                </div>
+                % endfor
+            </div>
+        </div>
+    </div>
+</div>

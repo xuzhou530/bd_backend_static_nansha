@@ -1,0 +1,38 @@
+<tr>
+    <th>账户</th>
+    <th>密码</th>
+    <th>所属项目</th>
+    <th>角色</th>
+    <th>创建时间</th>
+    <th>操作</th>
+</tr>
+% for user in sub_users:
+% if user.mask == 0:
+<tr class="dab">
+% else:
+<tr>
+% endif
+    <td data-value="${user.name}">${user.name}</td>
+    <td data-value=""><em>***</em></td>
+    % if user._location:
+    <%
+      projectname = ''
+      project = query.filter_by(_location=user._location).one_or_none()
+      if project:
+        projectname = project.name
+    %>
+    <td data-value="${user._location}">${projectname}</td>
+    % else:
+    <td data-value="${user._location}"></td>
+    % endif
+    <td data-value="${user.role}">${user.role}</td>
+    <td data-value="${user.ctime.strftime('%Y-%m-%d')}">${user.ctime.strftime('%Y-%m-%d')}</td>
+    <td>
+      % if user.mask == 0:
+      <span class="unforbin">启用</span>
+      % else:
+      <span class="forbin">停用</span>
+      % endif
+      <span class="edit">编辑</span></td>
+</tr>
+% endfor

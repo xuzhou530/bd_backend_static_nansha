@@ -1,0 +1,304 @@
+## projectmsg.html
+<%inherit file="base.html" />
+
+<div class="wrapper">
+    <input type="hidden" name="" id="pms-create-message" value="${ins.is_allowed('create', 'ap')}">
+    <input type="hidden" name="" id="pms-delete-message" value="${ins.is_allowed('delete', 'ap')}">
+    <input type="hidden" name="" id="pms-update-message" value="${ins.is_allowed('update', 'ap')}">
+    <input type="hidden" value="${location}" id="location" />
+    <!--导航-->
+    <%include file="nav.html" />
+    <!--右侧功能栏-->
+    <div class="projects">
+        <div class="tabbox">
+            <div class="bread">
+                <%include file="bread_nav.html" args="location=location,ins=ins,suffix='新闻公告'"/>
+            </div>
+        </div>
+        <div class="tabbox ns_message">
+            <div class="toolnav">
+                <h3>选择人群</h3>
+            </div>
+            <div class="areabox">
+                <button type="button" class="btnGrayImg proUserCls on"><i class="allUserIco"></i>全体</button>
+                <button type="button" class="btnGrayImg proUserCls"><i class="userIco"></i>快到期用户</button>
+            </div>
+            <!--<h6>手机短信</h6>-->
+            <!--<div class="areabox">-->
+                <!--<button type="button" class="btnGrayImg proMobileCls on" style="display: block;"><i class="appsIco"></i>APP消息</button>-->
+                <!--<button type="button" class="btnGrayImg proMobileCls on"><i class="mobileIco"></i>手机短信</button>-->
+            <!--</div>-->
+            <a name="newsPD"></a>
+            <div class="news">
+                <div class="toolnav">
+                    <h3>新闻列表</h3>
+                    <div class="toolbox">
+                        % if ins.is_allowed('create', 'message'):
+                        <button type="button" class="btnGraySmall" id="addnews"><i class="addGrayIco"></i>新增</button>
+                        % endif
+                    </div>
+                </div>
+                <div class="areabox">
+                    <div class="msgContent">
+                        <!--<div class="msgList">-->
+                            <!--<h3>2016智能物流将如何发展？<span>2016-01-02 源文出自 niot</span></h3>-->
+                            <!--<div class="msgNews">-->
+                                <!--<div class="msgImg"><img src="../static/images/projects/new001.png" /></div>-->
+                                <!--<div class="msgCtx">智能物流是利用集成智能化技术，使物流系统能模仿人的智能，具有思维，感知，学习，推理判断和自行解决物流中某些问题的能力。智能物流的未来发展将会体现出四个特点：智能化，一体化和层次化，柔性化与社会化。在物流作业过程中的大量运筹与决策的智能化；以物流管理为核心，实现物流过程中运输，存储，包装，装卸等环节的一体化和智能物流系统的层次化；智能物流的发展会更加突出“以顾客为中心”的理念</div>-->
+                            <!--</div>-->
+                            <!--<div class="msgBtn"><a href="javascript:;" class="msgDel"><i class="delIco"></i>删除</a><a href="javascript:;" class="msgEdit"><i class="editIco"></i>编辑</a></div>-->
+                        <!--</div>-->
+                    </div>
+                    <div class="page"><input type="button" value="下一页" class="btnWhiteSmall next" /><input type="button" value="上一页" class="btnWhiteSmall prev" /></div>
+                </div>
+            </div>
+            <div class="news handleNews">
+                <div class="toolnav">
+                    <h3>编辑消息</h3>
+                </div>
+                <div class="areabox">
+                    <textarea></textarea>
+                    <button type="button" class="btnGreenAutoMin">发送</button>
+                </div>
+            </div>
+            <div class="news handleNews">
+                <div class="toolnav">
+                    <h3><em>新增</em>消息</h3>
+                    <div class="toolbox">
+                        <button type="button" class="btnGraySmall reback">返回</button>
+                    </div>
+                </div>
+                <div class="areabox">
+                    <ul class="vertical">
+                        <li><label>标题：</label><span class="veright"><input type="text" class="iputxt title" /></span></li>
+                        <li><label>副标题：</label><span class="veright"><input type="text" class="iputxt subtitle" /></span></li>
+                        <li><label>发布区域：</label><span class="veright">
+                            <select class="area">
+                              % for r in resources:
+                              <option value="${r._location.split(',')[-1]}">${r.name}</option>
+                              % endfor
+                            </select>
+                        </span></li>
+                        <li>
+                            <label>封面图片：</label>
+                            <span class="veright">
+                                <div class="file">
+                                    <input type="hidden" class="imgVal" />
+                                    <input type="file" class="uploadImg" id="uploadImg" name="uploadImg" />
+                                    <button type="button" class="btnGreen">选择图片</button>
+                                    <div class="loading"></div>
+                                </div>
+                                <div class="showImg">
+                                    <img src="" />
+                                    <i class="deluploadImg"></i>
+                                </div>
+                            </span>
+                        </li>
+                        <li><label>内容：</label><span class="veright"><div class="editbox"><script id="editor" type="text/plain" style="width:100%; height:420px;"></script></div></span></li>
+                        <li><button type="button" class="btnGreenAutoMin subNews">发送</button><input type="hidden" id="newsID" value="" /><input type="hidden" id="sendType" value="" /></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%block name="jscode">
+<script type="text/javascript" src="/static/js/lib/ajaxfileupload.js"></script>
+<script type="text/javascript" src="/static/js/lib/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="/static/js/lib/ueditor/ueditor.all.js"></script>
+<script type="text/javascript">
+    $(function(){
+        //编辑器初始化
+        var ue = UE.getEditor('editor');
+        ue.ready(function(){});
+
+        var page=0, isEnd=0;   //page:当前页码  isEnd:尾页标识  sendType:请求类型
+        //获取新闻列表
+        var getNews = function(page){
+            $.ajax({
+                method: "get",
+                url: '/message',
+                data: {page: page, location: $('#location').val()},
+                dataType: "json",
+                success: function(data){
+                    var len=data.messages.length, h='';
+                    for(var i=0; i<len; i++){
+                        var t='<div class="msgList">'+
+                                '<input type="hidden" value="'+data.messages[i].id+'" />'+
+                            '<h3>'+data.messages[i].title+'<span>'+data.messages[i].ctime+' 源文出自 '+data.messages[i].author+'</span></h3>'+
+                            '<div class="msgNews">'+
+                                '<div class="msgImg">' + (data.messages[i].image==''?'<img src="/static/images/cover/5.png" />':'<img src="'+cmsUrl+data.messages[i].image+'" />') +'</div>'+
+                                '<div class="msgCtx">'+data.messages[i].subtitle+'</div>'+
+                            '</div>'+
+                            '<div class="msgBtn"><a href="javascript:;" class="msgDel"><i class="delIco"></i>删除</a><a href="javascript:;" class="msgEdit"><i class="editIco"></i>编辑</a></div>'+
+                        '</div>';
+                        h += t;
+                    }
+                    $('.msgContent').html(h);
+                    isEnd=data.end;
+
+                    $('body, html').scrollTop(492);
+                }
+            });
+        };
+
+        var getNewsOne = function(page){
+            $.ajax({
+                url: '/message',
+                data: {page: page, location: $('#location').val()},
+                type: "get",
+                dataType: "json",
+                success: function(data){
+                    var len=data.messages.length, h='';
+                    for(var i=0; i<len; i++){
+                        var t='<div class="msgList">'+
+                                '<input type="hidden" value="'+data.messages[i].id+'" />'+
+                            '<h3>'+data.messages[i].title+'<span>'+data.messages[i].ctime+' 源文出自 '+data.messages[i].author+'</span></h3>'+
+                            '<div class="msgNews">'+
+                                '<div class="msgImg">'+ (data.messages[i].image==''?'<img src="/static/images/cover/5.png" />':'<img src="'+cmsUrl+data.messages[i].image+'" />')+'</div>'+
+                                '<div class="msgCtx">'+data.messages[i].subtitle+'</div>'+
+                            '</div>'+
+                            '<div class="msgBtn"><a href="javascript:;" class="msgDel"><i class="delIco"></i>删除</a><a href="javascript:;" class="msgEdit"><i class="editIco"></i>编辑</a></div>'+
+                        '</div>';
+                        h += t;
+                    }
+                    $('.msgContent').html(h);
+                    isEnd=data.end;
+                }
+            });
+        };
+        getNewsOne(page);
+
+        //上一页
+        $(document).on('click', '.prev', function(){
+            page-=1;
+            if(page>=0){
+                getNews(page);
+            }else{
+                page+=1;
+                return false;
+            }
+        });
+        //下一页
+        $(document).on('click', '.next', function(){
+            if(isEnd==0){
+                page+=1;
+                getNews(page);
+            }else{
+                return false;
+            }
+        });
+        //新增新闻
+        $(document).on('click', '#addnews', function(){
+            $('.news:eq(2)').show().siblings('.news').hide();
+            $('.news:eq(2) h6 em').text('新增');
+            $('#sendType').val('post');
+            $('.title').val('');$('.subtitle').val('');$('.imgVal').val('');$('#newsID').val();
+            $('.showImg').hide();
+            ue.ready(function(){
+                ue.setContent('');
+            });
+        });
+        //编辑新闻
+        var stop=492;
+        $(document).on('click', '.msgEdit', function(){
+            stop = $(window).scrollTop();
+            $('body,html').scrollTop(492);
+
+            $('.news:eq(2)').show().siblings('.news').hide();
+            $('.news:eq(2) h6 em').text('编辑');
+            $('#sendType').val('put');
+            var id=$(this).parent().parent().find('input').val();
+            $.ajax({
+                url: '/message/detail?id='+id,
+                type: "get",
+                dataType: "json",
+                success: function(data){
+                    $('#newsID').val(data.id);
+                    $('.title').val(data.title);
+                    $('.subtitle').val(data.subtitle);
+                    $('.imgVal').val(data.image);
+                    if(data.image==''){
+                        $('.showImg').hide();
+                    }else{
+                        $('.showImg img').attr('src', cmsUrl+data.image);
+                        $('.showImg').show();
+                    }
+                    $('.area').val(data.groups);
+                    ue.ready(function(){
+                        ue.setContent(data.content);
+                    });
+                }
+            });
+        });
+        // 返回
+        $(document).on('click', '.reback', function(){
+            $('.news:eq(0)').show().siblings('.news').hide();
+            $('body, html').scrollTop(stop);
+            stop=492;
+        });
+
+        //发送新闻
+        $(document).on('click', '.subNews', function(){
+            var sendType=$('#sendType').val(), id=$('#newsID').val(), flag;
+            if(id==''){
+                var url='/message';
+                flag=true;
+            }else{
+                var url='/message?id='+id;
+                flag=false;
+            }
+
+            var objNews={
+                title: $('.title').val(),
+                subtitle: $('.subtitle').val(),
+                section: 1,
+                content: ue.getContent(),
+                image: $('.imgVal').val(),
+                groups: $('.area').val(),
+                mask: 1<<1
+            };
+
+            $.ajax({
+                url: url,
+                data: objNews,
+                type: sendType,
+                dataType: "json",
+                success: function(data){
+                    if(data.code==200){
+                        alert('success');
+                        if(flag){ page=0;}
+                        getNews(page);
+                        $('.news:eq(0)').show().siblings('.news').hide();
+                    }else{
+                        alert('error');
+                    }
+                }
+            });
+        });
+
+        //删除新闻
+        $(document).on('click', '.msgDel', function(){
+            var $this = $(this);
+            var id=$this.parent().parent().find('input').val();
+
+            if(confirm("确定要删除吗？")){
+                $.ajax({
+                    url: '/message?id='+id,
+                    type: "delete",
+                    dataType: "json",
+                    success: function(data){
+                        console.log(data);
+                        $this.parent().parent().remove();
+                        alert("删除成功！");
+                    },
+                    error: function(data){
+                        alert("删除失败！");
+                    }
+                });
+            }
+        });
+    });
+</script>
+</%block>

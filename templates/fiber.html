@@ -1,0 +1,105 @@
+## fiber.html
+<%inherit file="base.html" />
+
+<div class="wrapper">
+    <input type="hidden" name="" id="pms-create-fiber" value="${ins.is_allowed('create', 'fiber')}">
+    <input type="hidden" name="" id="pms-update-fiber" value="${ins.is_allowed('update', 'fiber')}">
+    <input type="hidden" name="" id="pms-delete-fiber" value="${ins.is_allowed('delete', 'fiber')}">
+    <!--导航-->
+    <%include file="nav.html" />
+    <!--右侧功能栏-->
+    <div class="projects">
+        <div class="tabbox">
+            <div class="bread">
+                <h2>光纤管理</h2>
+            </div>
+        </div>
+        <div class="tabbox ns_table" id="fiberlist">
+            <div class="toolnav">
+                <h3>宽带信息</h3>
+                <div class="toolbox">
+                    % if ins.is_allowed('create', 'fiber'):
+                    <button type="button" class="btnGraySmall add">新增</button>
+                    % endif
+                </div>
+            </div>
+            <ul class="adsnav navMin">
+                % for fibertype in fiber_types:
+                    % if fibertype.id==type_id:
+                    <li data-id="${fibertype.id}" class="on">${fibertype.name}</li>
+                    % else:
+                    <li data-id="${fibertype.id}">${fibertype.name}</li>
+                    % endif
+                % endfor
+            </ul>
+            <div class="areabox">
+                <table class="centerAlign">
+                    <tr>
+                        <th>线路</th>
+                        <th>开通时间</th>
+                        <th>到期时间</th>
+                        <th>所属电信单位</th>
+                        % if ins.is_allowed('update', 'fiber') or ins.is_allowed('delete', 'fiber'):
+                        <th>操作</th>
+                        % endif
+                    </tr>
+                    % for fiber in fibers:
+                    <tr>
+                        <td data-value="${fiber.line}">${fiber.line}</td>
+                        <td data-value="${fiber.start.strftime('%Y-%m-%d')}">${fiber.start.strftime('%Y-%m-%d')}</td>
+                        <td data-value="${fiber.end.strftime('%Y-%m-%d')}">${fiber.end.strftime('%Y-%m-%d')}</td>
+                        <td data-value="${fiber.telecom}">${fiber.telecom}</td>
+                        % if ins.is_allowed('update', 'fiber') or ins.is_allowed('delete', 'fiber'):
+                        <td><span class="edit">编辑</span><span class="delete">删除</span><input type="hidden" value="${fiber.id}" /></td>
+                        % endif
+                    </tr>
+                    % endfor
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%block name="jscode">
+    <script src="/static/js/lib/jqueryui.min.js"></script>
+    <script type="text/javascript" src="/static/js/lib/jqueryui.min.js"></script>
+    <script type="text/javascript" src="/static/js/lib/jquery-ui-timepicker-addon.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            // 日期
+            $("#dateStart").datepicker({
+                dateFormat: 'yy-mm-dd',
+                stepMinute: 10,
+                onClose: function(selectedDate) {
+                    $("#dateEnd").datepicker("option", "minDate", selectedDate);
+                }
+            });
+            $("#dateEnd").datepicker({
+                dateFormat: 'yy-mm-dd',
+                stepMinute: 10,
+                onClose: function(selectedDate) {
+                    $("#dateStart").datepicker("option", "maxDate", selectedDate);
+                }
+            });
+        });
+    </script>
+</%block>
+
+<%block name="aside">
+    <div class="modal fade" id="modalFiber">
+        <div class="modal_fiber modal_body">
+            <h3>新增宽带</h3>
+            <ul class="vertical">
+                <li><label>线路：</label><span class="veright"><div class="verify"><input type="text" name="line" class="matchVerify shouldVerify" /></div></span></li>
+                <li><label>开通时间：</label><span class="veright"><div class="verify"><input type="text" name="start" id="dateStart" /></div></span></li>
+                <li><label>到期时间：</label><span class="veright"><div class="verify"><input type="text" name="end" id="dateEnd" /></div></span></li>
+                <li><label>所属电信单位：</label><span class="veright"><div class="verify"><input type="text" name="telecom" /></div></span></li>
+            </ul>
+            <div class="btngroups"><button type="button" class="btnBlue add">确定</button></div>
+            <i class="msg"></i>
+            <span class="closed">X</span>
+            <input type="hidden" name="idx" />
+            <input type="hidden" name="id" />
+        </div>
+    </div>
+</%block>

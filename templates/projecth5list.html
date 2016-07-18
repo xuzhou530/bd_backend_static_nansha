@@ -1,0 +1,70 @@
+## projecth5page.html
+<%inherit file="base.html" />
+
+<div class="wrapper">
+    <input type="hidden" id="location" value="${location}" />
+    <!--导航-->
+    <%include file="nav.html" />
+    <!--右侧功能栏-->
+    <div class="projects">
+        <div class="tabbox">
+            <div class="bread">
+                <%include file="bread_nav.html" args="location=location,ins=ins,suffix='H5页面管理'"/>
+            </div>
+        </div>
+        <div class="tabbox ns_table" id="portallist">
+            <div class="toolnav">
+                <h3>Portal列表</h3>
+                <div class="toolbox">
+                    <button type="button" class="btnGraySmall addbtn">新增</button>
+                </div>
+            </div>
+            <div class="areabox">
+                <table>
+                    <tr>
+                        <th>名称</th>
+                        <th>操作</th>
+                    </tr>
+                    % for p in sorted(portals, key=lambda x: -x['mask']):
+                      % if p['mask'] == 1:
+                      <tr>
+                      % else:
+                      <tr class="dab">
+                      % endif
+                          <td>${p['name']}</td>
+                          <td><span class="edit">模板名称</span><a href="/projecth5page.html?location=${location}&id=${p['_id']}">编辑</a>
+                          % if p['mask'] == 1:
+                          <span class="forbin">停用</span>
+                          % else:
+                          <span class="unforbin">启用</span>
+                          % endif
+                          <span class="delete">删除</span><input type="hidden" value="${p['_id']}" /></td>
+                      </tr>
+                    % endfor
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%block name="aside">
+    <div class="modal fade" id="modalPortal">
+        <div class="modal_portal modal_body">
+            <h3>新增Portal</h3>
+            <ul class="vertical">
+                <li><label><i>*</i>名称：</label>
+                    <span class="veright">
+                        <div class="verify">
+                            <input type="text" name="name" class="matchVerify shouldVerify" />
+                        </div>
+                    </span>
+                </li>
+            </ul>
+            <div class="btngroups"><button type="button" class="btnBlue add">确定</button></div>
+            <i class="msg"></i>
+            <span class="closed">X</span>
+            <input type="hidden" name="id" />
+            <input type="hidden" name="idx" />
+        </div>
+    </div>
+</%block>

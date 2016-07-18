@@ -1,0 +1,110 @@
+
+<% import re %>
+<% 
+def process_platform(user): 
+    plf = platforms.get(user, '')
+    p = re.findall(r'\(([^\)]+)', plf) 
+    if p:
+    	p = ''.join(p[0])
+    	p = re.split(r'[,|;]', p)
+    	excludes = ('linux', 'android', 'iphone', 'u', 'zh-cn', 'like', 'gecko')
+    	p = [item.strip() for item in p if item.lower() not in excludes]
+    	ret = ''.join(p)
+    else:
+	ret = plf
+    return ret
+%>
+<tr>
+  % for h in headers:
+    % if h['is_profile']:
+      % if h['column'] in sort and sort[h['column']] < 0:
+      <th column="${h['column']}" sort="${sort.get(h['column'], -1)}" class="sortOn sortDown"><span><em>${h['title']}</em><i></i></span></th>
+      % elif h['column'] in sort and sort[h['column']] > 0:
+      <th column="${h['column']}" sort="${sort.get(h['column'], -1)}" class="sortOn sortUp"><span><em>${h['title']}</em><i></i></span></th>
+      % else:
+      <th column="${h['column']}" sort="${sort.get(h['column'], -1)}" class="sortOn"><span><em>${h['title']}</em><i></i></span></th>
+      % endif
+    % endif
+  % endfor
+  % if mask == 8:
+  <th>流量</th>
+  <th width="30%;" >客户端</th>
+  % endif
+  % if ins.is_allowed('update', 'user'):
+  <th>操作</th>
+  % endif
+</tr>
+% if mask != 8:
+  % for row in rows:
+  % if row.mask & (1 << 30) <= 0:
+  <tr>
+  % else:
+  <tr class="dab">
+  % endif
+    % for h in headers:
+      % if h['is_profile']:
+        % if h['type']=='password':
+        <td type="${h['type']}" data-value="${getattr(row, h['column'], '')}" data-tip="${getattr(row, h['column'], '')}" class="pwdtip">***</td>
+        % else:
+        <td type="${h['type']}" data-value="${getattr(row, h['column'], '')}">${getattr(row, h['column'], '')}</td>
+        % endif
+      % endif
+    % endfor
+    <td>
+      % if ins.is_allowed('update', 'user'):
+      % if mask == 1:
+      <a href="/projectuserinfo.html?location=${location}&mask=${mask}&user_id=${row.id}">编辑</a>
+      % else:
+      <a href="/projectuserinfo.html?location=${location}&mask=${mask}&user_id=${row.user}">编辑</a>
+      % endif
+      % endif
+      % if mask == 1:
+      <input type="hidden" value="${row.id}"/>
+      % endif
+      % if mask in [2, 4]:
+      <input type="hidden" value="${row.user}" holder/>
+      % endif
+      % if ins.is_allowed('update', 'user'):
+        % if row.mask & (1 << 30) <= 0:
+        <span class="forbin">停用</span>
+        % else:
+        <span class="unforbin">启用</span>
+        % endif
+        % if not (mask in [2, 4] and row.user == str(row.holder)):
+        <span class="delete">删除</span>
+        % endif
+      % endif
+    </td>
+  </tr>
+  % endfor
+% else:
+  % for online in rows:
+  % if online.mask & (1 << 30) <= 0:
+  <tr>
+  % else:
+  <tr class="dab">
+  % endif
+    % for h in headers:
+      % if h['is_profile']:
+        % if h['type']=='password':
+        <td type="${h['type']}" data-value="${getattr(online, h['column'], '')}" data-tip="${getattr(online, h['column'], '')}" class="pwdtip">***</td>
+        % else:
+        <td type="${h['type']}" data-value="${getattr(online, h['column'], '')}">${getattr(online, h['column'], '')}</td>
+        % endif
+      % endif
+    % endfor
+    <td>${_t(online.traffic)}M</td>
+    <td style="overflow:hidden;">${process_platform(online.user)}</td>
+    % if ins.is_allowed('update', 'user'):
+    <td>
+      % if online.mask & (1 << 30) <= 0:
+      <span class="forbin">停用</span>
+      % else:
+      <span class="unforbin">启用</span>
+      % endif
+      <input type="hidden" value="${online.user}"/>
+    </td>
+    % endif
+  </tr>
+  % endfor
+% endif
