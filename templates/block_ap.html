@@ -18,7 +18,7 @@ vendors = {r['_id']: trans.get(r['_id'], r['_id']) for r in rcds}
       </select>
   </th>
   <th>位置</th>
-  <th column="conns" sort="-1" class="sortOn"><span><em>最后连接数</em><i></i></span></th>
+  <th column="conns" sort="${sort.get('conns', -1)}" class="sortOn"><span><em>最后连接数</em><i></i></span></th>
   % if ins.is_allowed('update', 'ap'):
   <th>操作</th>
   % endif
